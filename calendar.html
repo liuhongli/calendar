@@ -308,7 +308,7 @@
         </style>
     </head>
     <body>
-        <div style="text-align: center; margin-bottom: 15px">
+        <div style="text-align: center; margin-bottom: 10px">
             <a
                 href="index.html"
                 style="
@@ -318,6 +318,36 @@
                 "
                 >🎉 切换到抽奖系统</a
             >
+        </div>
+        <div
+            style="
+                display: flex;
+                justify-content: center;
+                gap: 5px;
+                margin-bottom: 15px;
+            "
+        >
+            <input
+                type="text"
+                id="global-word-input"
+                placeholder="输入单词"
+                style="
+                    padding: 6px;
+                    border: 1px solid #ddd;
+                    border-radius: 6px;
+                    width: 100px;
+                    font-size: 12px;
+                "
+            />
+            <button
+                class="btn"
+                style="width: auto; padding: 6px 12px"
+                onclick="
+                    speak(document.getElementById('global-word-input').value)
+                "
+            >
+                🔊 朗读
+            </button>
         </div>
         <div class="container">
             <header>
@@ -679,7 +709,7 @@
                     } else {
                         clickTimer = setTimeout(() => {
                             clickTimer = null;
-                            startCheckInFlow(dateStr);
+                            startCheckInFlow(dateStr, wordObj.en);
                         }, 250);
                     }
                 };
@@ -700,8 +730,11 @@
                 }
             }
 
-            function startCheckInFlow(dateStr) {
-                if (checkins.includes(dateStr)) return;
+            function startCheckInFlow(dateStr, wordEn) {
+                if (checkins.includes(dateStr)) {
+                    speak(wordEn);
+                    return;
+                }
                 const target = new Date(dateStr);
                 const now = new Date();
                 now.setHours(0, 0, 0, 0);
