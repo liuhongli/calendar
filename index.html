@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>随机抽奖系统</title>
+        <style>
+            :root {
+                --primary-color: #ff4757;
+                --secondary-color: #2f3542;
+                --bg-color: #f1f2f6;
+                --card-bg: #ffffff;
+            }
+
+            body {
+                font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--bg-color);
+                color: var(--secondary-color);
+                margin: 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .container {
+                max-width: 1000px;
+                width: 100%;
+                display: grid;
+                grid-template-columns: 350px 1fr;
+                gap: 20px;
+            }
+
+            .panel {
+                background: var(--card-bg);
+                padding: 20px;
+                border-radius: 12px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            h2 {
+                margin-top: 0;
+                color: var(--primary-color);
+                border-bottom: 2px solid var(--bg-color);
+                padding-bottom: 10px;
+            }
+
+            .input-group {
+                margin-bottom: 15px;
+            }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 8px;
+                box-sizing: border-box;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+            }
+
+            .btn {
+                cursor: pointer;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-weight: bold;
+                transition: opacity 0.2s;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+
+            .btn:active {
+                opacity: 0.8;
+            }
+
+            .btn-add {
+                background-color: #2ed573;
+                color: white;
+                width: 100%;
+            }
+            .btn-test {
+                background-color: #1e90ff;
+                color: white;
+                width: 100%;
+                margin-top: 10px;
+            }
+            .btn-lottery {
+                background-color: var(--primary-color);
+                color: white;
+                font-size: 24px;
+                padding: 15px 50px;
+                border-radius: 50px;
+                box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
+            }
+            .btn-stop {
+                background-color: #747d8c;
+            }
+
+            #display-area {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 400px;
+                text-align: center;
+            }
+
+            .rolling-box {
+                width: 300px;
+                height: 350px;
+                border: 5px solid var(--primary-color);
+                border-radius: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                background: white;
+                margin-bottom: 20px;
+                transition: transform 0.1s;
+            }
+
+            .rolling-avatar {
+                width: 150px;
+                height: 150px;
+                border-radius: 50%;
+                background: #eee;
+                margin-bottom: 20px;
+                object-fit: cover;
+            }
+
+            .rolling-info {
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            .rolling-id {
+                color: #888;
+                font-size: 18px;
+            }
+
+            .stats {
+                margin-top: 20px;
+                font-size: 14px;
+            }
+
+            .winner-list {
+                margin-top: 20px;
+                max-height: 200px;
+                overflow-y: auto;
+                border-top: 1px solid #eee;
+                padding-top: 10px;
+            }
+
+            .winner-item {
+                display: flex;
+                align-items: center;
+                margin-bottom: 5px;
+                font-size: 14px;
+                background: #fff9f9;
+                padding: 5px;
+                border-radius: 4px;
+            }
+
+            .winner-item img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                margin-right: 10px;
+            }
+
+            .participant-count {
+                font-weight: bold;
+                color: var(--primary-color);
+            }
+        </style>
+    </head>
+    <body>
+        <h1>🎉 幸运抽奖系统 🎉</h1>
+
+        <div class="container">
+            <!-- 左侧：录入与管理 -->
+            <div class="panel">
+                <h2>信息录入</h2>
+                <div class="input-group">
+                    <label>序号 (ID)</label>
+                    <input type="text" id="input-id" placeholder="如：001" />
+                </div>
+                <div class="input-group">
+                    <label>姓名</label>
+                    <input type="text" id="input-name" placeholder="如：张三" />
+                </div>
+                <button class="btn btn-add" onclick="manualAdd()">
+                    添加人员
+                </button>
+
+                <div
+                    class="input-group"
+                    style="
+                        margin-top: 20px;
+                        border-top: 1px solid #eee;
+                        padding-top: 15px;
+                    "
+                >
+                    <label>批量生成测试人员 (数量)</label>
+                    <input type="number" id="test-count" value="100" min="1" />
+                    <button
+                        class="btn btn-test"
+                        onclick="generateTestData()"
+                        style="margin-top: 10px"
+                    >
+                        执行生成
+                    </button>
+                </div>
+
+                <div class="stats">
+                    总人数:
+                    <span id="total-count" class="participant-count">0</span> |
+                    待抽奖:
+                    <span id="remain-count" class="participant-count">0</span>
+                </div>
+
+                <div
+                    style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-top: 20px;
+                        border-bottom: 2px solid var(--bg-color);
+                        padding-bottom: 10px;
+                        margin-bottom: 10px;
+                    "
+                >
+                    <h2 style="margin: 0; border: none; padding: 0">
+                        中奖名单
+                    </h2>
+                    <button
+                        class="btn"
+                        style="
+                            background-color: #ffa502;
+                            color: white;
+                            padding: 4px 10px;
+                            font-size: 12px;
+                            margin: 0;
+                            width: auto;
+                        "
+                        onclick="clearWinners()"
+                    >
+                        清空名单
+                    </button>
+                </div>
+                <div id="winner-list" class="winner-list">
+                    <!-- 中奖者将显示在这里 -->
+                </div>
+            </div>
+
+            <!-- 右侧：抽奖展示区 -->
+            <div class="panel" id="display-area">
+                <div class="rolling-box" id="rolling-box">
+                    <img
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=default"
+                        alt="头像"
+                        class="rolling-avatar"
+                        id="roll-avatar"
+                    />
+                    <div class="rolling-info" id="roll-name">等待开始</div>
+                    <div class="rolling-id" id="roll-id">#ID</div>
+                </div>
+
+                <button
+                    id="ctrl-btn"
+                    class="btn btn-lottery"
+                    onclick="toggleLottery()"
+                >
+                    开始抽奖
+                </button>
+            </div>
+        </div>
+
+        <script>
+            let participants = [];
+            let winners = [];
+            let rollingInterval = null;
+            let currentRollIndex = -1;
+
+            // 清空中奖名单
+            function clearWinners() {
+                if (participants.length > 0 && winners.length > 0) {
+                    if (
+                        confirm("确定要清空所有中奖记录并将他们放回抽奖池吗？")
+                    ) {
+                        winners = [];
+                        document.getElementById("winner-list").innerHTML = "";
+                        updateStats();
+                    }
+                }
+            }
+
+            // 生成随机头像URL
+            function getRandomAvatar(seed) {
+                return `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed || Math.random()}`;
+            }
+
+            // 更新统计显示
+            function updateStats() {
+                document.getElementById("total-count").innerText =
+                    participants.length;
+                const remaining = participants.filter(
+                    (p) => !winners.find((w) => w.id === p.id),
+                ).length;
+                document.getElementById("remain-count").innerText = remaining;
+            }
+
+            // 手动添加
+            function manualAdd() {
+                const idInput = document.getElementById("input-id");
+                const nameInput = document.getElementById("input-name");
+                const id = idInput.value.trim();
+                const name = nameInput.value.trim();
+
+                if (!id || !name) {
+                    alert("请输入完整的序号和姓名！");
+                    return;
+                }
+
+                if (participants.find((p) => p.id === id)) {
+                    alert("该序号已存在！");
+                    return;
+                }
+
+                participants.push({
+                    id: id,
+                    name: name,
+                    avatar: getRandomAvatar(id + name),
+                });
+
+                idInput.value = "";
+                nameInput.value = "";
+                updateStats();
+            }
+
+            // 生成测试数据
+            function generateTestData() {
+                const countInput = document.getElementById("test-count");
+                const count = parseInt(countInput.value) || 0;
+                if (count <= 0) {
+                    alert("请输入大于0的生成数量！");
+                    return;
+                }
+
+                let added = 0;
+                let i = 1;
+                // 循环查找不重复的ID进行添加
+                while (added < count) {
+                    const id = "T" + String(i).padStart(3, "0");
+                    if (!participants.find((p) => p.id === id)) {
+                        participants.push({
+                            id: id,
+                            name: "测试用户_" + i,
+                            avatar: getRandomAvatar("test" + i),
+                        });
+                        added++;
+                    }
+                    i++;
+                    if (i > 5000) break; // 安全保护
+                }
+                updateStats();
+                alert(`已成功批量生成 ${added} 名测试人员！`);
+            }
+
+            // 切换抽奖状态
+            function toggleLottery() {
+                if (rollingInterval) {
+                    stopRolling();
+                } else {
+                    startRolling();
+                }
+            }
+
+            function startRolling() {
+                const pool = participants.filter(
+                    (p) => !winners.find((w) => w.id === p.id),
+                );
+
+                if (pool.length === 0) {
+                    alert("抽奖池已空！请先添加人员。");
+                    return;
+                }
+
+                const btn = document.getElementById("ctrl-btn");
+                btn.innerText = "停止";
+                btn.classList.add("btn-stop");
+
+                rollingInterval = setInterval(() => {
+                    const randomIndex = Math.floor(Math.random() * pool.length);
+                    const person = pool[randomIndex];
+
+                    document.getElementById("roll-avatar").src = person.avatar;
+                    document.getElementById("roll-name").innerText =
+                        person.name;
+                    document.getElementById("roll-id").innerText =
+                        "#" + person.id;
+
+                    currentRollIndex = participants.indexOf(person);
+                }, 50);
+            }
+
+            function stopRolling() {
+                clearInterval(rollingInterval);
+                rollingInterval = null;
+
+                const btn = document.getElementById("ctrl-btn");
+                btn.innerText = "开始抽奖";
+                btn.classList.remove("btn-stop");
+
+                if (currentRollIndex !== -1) {
+                    const winner = participants[currentRollIndex];
+                    winners.push(winner);
+                    addWinnerToUI(winner);
+                    updateStats();
+
+                    // 简单的视觉反馈
+                    const box = document.getElementById("rolling-box");
+                    box.style.transform = "scale(1.1)";
+                    setTimeout(() => (box.style.transform = "scale(1)"), 200);
+                }
+            }
+
+            function addWinnerToUI(winner) {
+                const list = document.getElementById("winner-list");
+                const div = document.createElement("div");
+                div.className = "winner-item";
+                div.innerHTML = `
+                <img src="${winner.avatar}" alt="avatar">
+                <span>[${winner.id}] <strong>${winner.name}</strong></span>
+            `;
+                list.prepend(div);
+            }
+        </script>
+    </body>
+</html>

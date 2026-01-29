@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>智能英语打卡系统</title>
+        <style>
+            :root {
+                --primary-color: #6c5ce7;
+                --success-color: #00b894;
+                --reward-color: #fdcb6e;
+                --system-reward-color: #ff7675;
+                --bg-color: #f0f2f5;
+                --text-color: #2d3436;
+            }
+
+            body {
+                font-family: "Segoe UI", "PingFang SC", sans-serif;
+                background-color: var(--bg-color);
+                margin: 0;
+                padding: 20px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                max-width: 900px;
+                width: 100%;
+                background: white;
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            }
+
+            header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+            }
+
+            .month-title {
+                font-size: 24px;
+                font-weight: bold;
+                color: var(--primary-color);
+            }
+
+            .calendar-grid {
+                display: grid;
+                grid-template-columns: repeat(7, 1fr);
+                gap: 10px;
+            }
+
+            .weekday {
+                text-align: center;
+                font-weight: bold;
+                color: #636e72;
+                padding: 10px 0;
+            }
+
+            .day {
+                min-height: 120px;
+                border: 1px solid #dfe6e9;
+                border-radius: 10px;
+                padding: 8px;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                cursor: pointer;
+                transition: all 0.2s;
+                overflow: hidden;
+                background: #fff;
+                align-items: center;
+            }
+
+            .day:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            }
+
+            .day.today {
+                border: 2px solid var(--primary-color);
+                background: #f8faff;
+            }
+
+            .day.other-month {
+                opacity: 0.3;
+                cursor: default;
+                pointer-events: none;
+            }
+
+            .day.checked-in {
+                background-color: #e6fffb;
+            }
+
+            .day.checked-in::before {
+                content: "✓";
+                position: absolute;
+                top: 2px;
+                right: 5px;
+                color: var(--success-color);
+                font-weight: bold;
+                font-size: 18px;
+                z-index: 2;
+            }
+
+            .day-num {
+                font-size: 12px;
+                font-weight: bold;
+                color: #b2bec3;
+                align-self: flex-start;
+                margin-bottom: 4px;
+            }
+
+            .daily-img {
+                width: 60px;
+                height: 60px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-bottom: 5px;
+                pointer-events: auto;
+                border: 1px solid #eee;
+            }
+
+            .word-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                width: 100%;
+            }
+
+            .daily-word {
+                font-size: 13px;
+                color: var(--primary-color);
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+
+            .daily-translation {
+                font-size: 11px;
+                color: #636e72;
+                margin-top: 2px;
+            }
+
+            .pronounce-btn {
+                background: none;
+                border: none;
+                cursor: pointer;
+                font-size: 12px;
+                padding: 2px;
+                color: var(--primary-color);
+                margin-top: 2px;
+                opacity: 0.7;
+            }
+
+            .pronounce-btn:hover {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+
+            .reward-icon,
+            .sys-reward-icon {
+                position: absolute;
+                bottom: 5px;
+                right: 5px;
+                font-size: 16px;
+                cursor: pointer;
+                z-index: 3;
+            }
+
+            .sys-reward-icon {
+                right: 25px; /* 偏移避免重叠 */
+            }
+
+            .sys-reward-tag {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: var(--system-reward-color);
+                color: white;
+                font-size: 9px;
+                padding: 1px 4px;
+                border-bottom-right-radius: 5px;
+                z-index: 2;
+            }
+
+            /* Modals */
+            .modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                backdrop-filter: blur(3px);
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            }
+
+            .modal-content {
+                background: white;
+                padding: 30px;
+                border-radius: 15px;
+                width: 320px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            }
+
+            .modal-content h3 {
+                margin-top: 0;
+                color: var(--primary-color);
+            }
+            .modal-content input {
+                width: 100%;
+                padding: 12px;
+                margin: 10px 0;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                box-sizing: border-box;
+            }
+
+            .btn-group {
+                display: flex;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            .btn {
+                flex: 1;
+                padding: 10px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+            }
+            .btn-confirm {
+                background: var(--primary-color);
+                color: white;
+            }
+            .btn-cancel {
+                background: #eee;
+            }
+
+            .info-card {
+                margin-top: 20px;
+                font-size: 13px;
+                color: #636e72;
+                background: #fdf9f9;
+                padding: 15px;
+                border-radius: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <div style="display: flex; gap: 10px">
+                    <button class="btn" onclick="changeMonth(-1)">
+                        上个月
+                    </button>
+                    <button
+                        class="btn"
+                        style="background: #a29bfe"
+                        onclick="promptPassword('sys_config')"
+                    >
+                        设置周期奖
+                    </button>
+                </div>
+                <div class="month-title" id="month-display">2023年 10月</div>
+                <button class="btn" onclick="changeMonth(1)">下个月</button>
+            </header>
+
+            <div class="calendar-grid" id="calendar-grid">
+                <div class="weekday">日</div>
+                <div class="weekday">一</div>
+                <div class="weekday">二</div>
+                <div class="weekday">三</div>
+                <div class="weekday">四</div>
+                <div class="weekday">五</div>
+                <div class="weekday">六</div>
+            </div>
+
+            <div class="info-card">
+                <p>🚀 <b>签到规则：</b></p>
+                <ul>
+                    <li>
+                        单击日期：进行打卡。一旦确认打卡，普通用户无法撤销。
+                    </li>
+                    <li>双击图片：设定/修改该日奖励（需管理员密码）。</li>
+                    <li>双击非图片区域：重置打卡状态（需管理员密码）。</li>
+                    <li>
+                        连续打卡满周期将获得周期奖。如中断，奖励会自动延后。
+                    </li>
+                    <li>点击 🔊 图标可以收听单词发音。</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 密码弹窗 -->
+        <div id="pw-modal" class="modal">
+            <div class="modal-content">
+                <h3 id="pw-title">身份验证</h3>
+                <input
+                    type="password"
+                    id="pw-input"
+                    placeholder="输入管理密码"
+                />
+                <div class="btn-group">
+                    <button
+                        class="btn btn-cancel"
+                        onclick="closeModal('pw-modal')"
+                    >
+                        取消
+                    </button>
+                    <button
+                        class="btn btn-confirm"
+                        onclick="confirmPasswordAction()"
+                    >
+                        确定
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 奖励设定弹窗 -->
+        <div id="reward-modal" class="modal">
+            <div class="modal-content">
+                <h3>设定奖励内容</h3>
+                <input
+                    type="text"
+                    id="reward-input"
+                    placeholder="例如：豪华大礼包"
+                />
+                <div class="btn-group">
+                    <button
+                        class="btn btn-cancel"
+                        onclick="closeModal('reward-modal')"
+                    >
+                        取消
+                    </button>
+                    <button class="btn btn-confirm" onclick="commitReward()">
+                        保存
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 确认签到弹窗 -->
+        <div id="checkin-modal" class="modal">
+            <div class="modal-content">
+                <h3>签到确认</h3>
+                <p id="checkin-msg"></p>
+                <div class="btn-group">
+                    <button
+                        class="btn btn-cancel"
+                        onclick="closeModal('checkin-modal')"
+                    >
+                        再想想
+                    </button>
+                    <button class="btn btn-confirm" onclick="commitCheckIn()">
+                        确定签到
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 系统奖励周期设定弹窗 -->
+        <div id="sys-reward-config-modal" class="modal">
+            <div class="modal-content">
+                <h3>周期奖励设定</h3>
+                <div
+                    style="
+                        text-align: left;
+                        font-size: 14px;
+                        margin-bottom: 5px;
+                    "
+                >
+                    打卡周期 (天)
+                </div>
+                <input
+                    type="number"
+                    id="sys-interval-input"
+                    placeholder="例如：7"
+                />
+                <div
+                    style="
+                        text-align: left;
+                        font-size: 14px;
+                        margin-bottom: 5px;
+                    "
+                >
+                    奖励内容
+                </div>
+                <input
+                    type="text"
+                    id="sys-content-input"
+                    placeholder="例如：额外获得10积分"
+                />
+                <div class="btn-group">
+                    <button
+                        class="btn btn-cancel"
+                        onclick="closeModal('sys-reward-config-modal')"
+                    >
+                        取消
+                    </button>
+                    <button
+                        class="btn btn-confirm"
+                        onclick="commitSysRewardConfig()"
+                    >
+                        保存设置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 奖励展示弹窗 -->
+        <div id="show-reward-modal" class="modal">
+            <div class="modal-content" style="text-align: center">
+                <h3>🎉 恭喜中奖</h3>
+                <div
+                    id="reward-text"
+                    style="
+                        font-size: 20px;
+                        color: #ff7675;
+                        margin: 20px 0;
+                        font-weight: bold;
+                    "
+                ></div>
+                <button
+                    class="btn btn-confirm"
+                    onclick="closeModal('show-reward-modal')"
+                >
+                    收下了
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const wordList = [
+                { en: "Dream", cn: "梦想" },
+                { en: "Brave", cn: "勇敢" },
+                { en: "Focus", cn: "专注" },
+                { en: "Great", cn: "伟大" },
+                { en: "Happy", cn: "快乐" },
+                { en: "Kind", cn: "善良" },
+                { en: "Light", cn: "光明" },
+                { en: "Noble", cn: "高尚" },
+                { en: "Ocean", cn: "海洋" },
+                { en: "Quiet", cn: "安静" },
+                { en: "River", cn: "河流" },
+                { en: "Smile", cn: "微笑" },
+                { en: "Trust", cn: "信任" },
+                { en: "Unity", cn: "团结" },
+                { en: "Value", cn: "价值" },
+                { en: "Young", cn: "年轻" },
+                { en: "Zest", cn: "热情" },
+                { en: "Active", cn: "活跃" },
+                { en: "Bright", cn: "明亮" },
+                { en: "Daily", cn: "日常" },
+                { en: "Energy", cn: "能量" },
+                { en: "Peace", cn: "和平" },
+                { en: "Glory", cn: "荣耀" },
+                { en: "Spirit", cn: "精神" },
+                { en: "Magic", cn: "魔法" },
+                { en: "Wisdom", cn: "智慧" },
+                { en: "Faith", cn: "信念" },
+                { en: "Music", cn: "音乐" },
+                { en: "Grace", cn: "优雅" },
+                { en: "Wonder", cn: "奇迹" },
+            ];
+
+            let sysRewardConfig = JSON.parse(
+                localStorage.getItem("cal_sys_reward") ||
+                    '{"interval": 7, "content": "周期性成就奖"}',
+            );
+            let viewDate = new Date();
+            let checkins = JSON.parse(
+                localStorage.getItem("cal_checkins") || "[]",
+            );
+            let rewards = JSON.parse(
+                localStorage.getItem("cal_rewards") || "{}",
+            );
+            let adminPassword = localStorage.getItem("cal_pw") || "";
+            let pendingDate = "";
+            let passwordActionType = "";
+
+            function render() {
+                const grid = document.getElementById("calendar-grid");
+                const headers = Array.from(grid.querySelectorAll(".weekday"));
+                grid.innerHTML = "";
+                headers.forEach((h) => grid.appendChild(h));
+
+                const y = viewDate.getFullYear();
+                const m = viewDate.getMonth();
+                document.getElementById("month-display").innerText =
+                    `${y}年 ${m + 1}月`;
+
+                const firstDay = new Date(y, m, 1).getDay();
+                const lastDate = new Date(y, m + 1, 0).getDate();
+                const prevLastDate = new Date(y, m, 0).getDate();
+
+                const sysRewardDates = [];
+                let validCount = 0;
+                const sortedCheckins = [...checkins].sort();
+                for (let cDate of sortedCheckins) {
+                    if (!rewards[cDate]) {
+                        validCount++;
+                        if (validCount % sysRewardConfig.interval === 0)
+                            sysRewardDates.push(cDate);
+                    }
+                }
+
+                for (let i = firstDay; i > 0; i--)
+                    grid.appendChild(createDay(prevLastDate - i + 1, true));
+                for (let d = 1; d <= lastDate; d++) {
+                    const dateStr = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                    grid.appendChild(
+                        createDay(
+                            d,
+                            false,
+                            dateStr,
+                            sysRewardDates.includes(dateStr),
+                        ),
+                    );
+                }
+            }
+
+            function createDay(num, isOther, dateStr, isSystemReward) {
+                const div = document.createElement("div");
+                div.className = "day" + (isOther ? " other-month" : "");
+                if (isOther) {
+                    div.innerHTML = `<span class="day-num">${num}</span>`;
+                    return div;
+                }
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                const isToday = new Date(dateStr).getTime() === today.getTime();
+                if (isToday) div.classList.add("today");
+                if (checkins.includes(dateStr)) div.classList.add("checked-in");
+
+                const seed = dateStr.replace(/-/g, "");
+                const wordObj = wordList[parseInt(seed) % wordList.length];
+
+                div.innerHTML = `<span class="day-num">${num}</span>`;
+
+                const img = document.createElement("img");
+                img.className = "daily-img";
+                img.src = `https://picsum.photos/seed/${seed}/120/120`; // 稍微大一点保证清晰
+                img.ondblclick = (e) => {
+                    e.stopPropagation();
+                    promptPassword("reward", dateStr);
+                };
+                div.appendChild(img);
+
+                const wordContainer = document.createElement("div");
+                wordContainer.className = "word-container";
+
+                const wordEl = document.createElement("div");
+                wordEl.className = "daily-word";
+                wordEl.innerText = wordObj.en;
+                wordContainer.appendChild(wordEl);
+
+                const transEl = document.createElement("div");
+                transEl.className = "daily-translation";
+                transEl.innerText = wordObj.cn;
+                wordContainer.appendChild(transEl);
+
+                const pronounceBtn = document.createElement("button");
+                pronounceBtn.className = "pronounce-btn";
+                pronounceBtn.innerHTML = "🔊";
+                pronounceBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    speak(wordObj.en);
+                };
+                wordContainer.appendChild(pronounceBtn);
+
+                div.appendChild(wordContainer);
+
+                if (rewards[dateStr]) {
+                    const icon = document.createElement("div");
+                    icon.className = "reward-icon";
+                    icon.innerText = "🎁";
+                    icon.onclick = (e) => {
+                        e.stopPropagation();
+                        showRewardInfo(dateStr, false);
+                    };
+                    div.appendChild(icon);
+                }
+
+                if (isSystemReward) {
+                    const tag = document.createElement("div");
+                    tag.className = "sys-reward-tag";
+                    tag.innerText = "系统奖";
+                    div.appendChild(tag);
+                    const sysIcon = document.createElement("div");
+                    sysIcon.className = "sys-reward-icon";
+                    sysIcon.innerText = "🏆";
+                    sysIcon.onclick = (e) => {
+                        e.stopPropagation();
+                        showRewardInfo(dateStr, true);
+                    };
+                    div.appendChild(sysIcon);
+                }
+
+                let clickTimer = null;
+                div.onclick = (e) => {
+                    if (clickTimer) {
+                        clearTimeout(clickTimer);
+                        clickTimer = null;
+                        promptPassword("reset", dateStr);
+                    } else {
+                        clickTimer = setTimeout(() => {
+                            clickTimer = null;
+                            startCheckInFlow(dateStr);
+                        }, 250);
+                    }
+                };
+
+                return div;
+            }
+
+            function speak(text) {
+                if ("speechSynthesis" in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.lang = "en-US";
+                    window.speechSynthesis.speak(utterance);
+                } else {
+                    alert("抱歉，您的浏览器不支持语音播放。");
+                }
+            }
+
+            function startCheckInFlow(dateStr) {
+                if (checkins.includes(dateStr)) return;
+                const target = new Date(dateStr);
+                const now = new Date();
+                now.setHours(0, 0, 0, 0);
+                if (target > now) {
+                    alert("未来的打卡机会还在赶来的路上，请明天再来！");
+                    return;
+                }
+                pendingDate = dateStr;
+                const nextRewardCount =
+                    sysRewardConfig.interval -
+                    (checkins.length % sysRewardConfig.interval);
+                document.getElementById("checkin-msg").innerText =
+                    `恭喜你完成打卡准备！\n\n距离获取下个系统奖励还需 ${nextRewardCount} 天。`;
+                openModal("checkin-modal");
+            }
+
+            function commitCheckIn() {
+                checkins.push(pendingDate);
+                checkins.sort();
+                localStorage.setItem("cal_checkins", JSON.stringify(checkins));
+                closeModal("checkin-modal");
+                render();
+            }
+
+            function promptPassword(type, dateStr) {
+                pendingDate = dateStr;
+                passwordActionType = type;
+                document.getElementById("pw-title").innerText = adminPassword
+                    ? "管理员身份验证"
+                    : "首次设置管理员密码";
+                openModal("pw-modal");
+            }
+
+            function confirmPasswordAction() {
+                const input = document.getElementById("pw-input").value;
+                if (!adminPassword) {
+                    if (input.length < 4) return alert("密码至少4位");
+                    adminPassword = input;
+                    localStorage.setItem("cal_pw", adminPassword);
+                } else if (input !== adminPassword) {
+                    return alert("密码错误！");
+                }
+                closeModal("pw-modal");
+                document.getElementById("pw-input").value = "";
+                if (passwordActionType === "reward") {
+                    document.getElementById("reward-input").value =
+                        rewards[pendingDate] || "";
+                    openModal("reward-modal");
+                } else if (passwordActionType === "sys_config") {
+                    document.getElementById("sys-interval-input").value =
+                        sysRewardConfig.interval;
+                    document.getElementById("sys-content-input").value =
+                        sysRewardConfig.content;
+                    openModal("sys-reward-config-modal");
+                } else if (passwordActionType === "reset") {
+                    checkins = checkins.filter((d) => d !== pendingDate);
+                    localStorage.setItem(
+                        "cal_checkins",
+                        JSON.stringify(checkins),
+                    );
+                    render();
+                }
+            }
+
+            function commitSysRewardConfig() {
+                const interval = parseInt(
+                    document.getElementById("sys-interval-input").value,
+                );
+                const content = document
+                    .getElementById("sys-content-input")
+                    .value.trim();
+                if (isNaN(interval) || interval < 1)
+                    return alert("周期必须是大于0的数字");
+                sysRewardConfig = { interval, content };
+                localStorage.setItem(
+                    "cal_sys_reward",
+                    JSON.stringify(sysRewardConfig),
+                );
+                closeModal("sys-reward-config-modal");
+                render();
+            }
+
+            function commitReward() {
+                const val = document
+                    .getElementById("reward-input")
+                    .value.trim();
+                if (val) rewards[pendingDate] = val;
+                else delete rewards[pendingDate];
+                localStorage.setItem("cal_rewards", JSON.stringify(rewards));
+                closeModal("reward-modal");
+                render();
+            }
+
+            function showRewardInfo(dateStr, isSys) {
+                if (!checkins.includes(dateStr))
+                    return alert("请先打卡解锁奖励！");
+                const text = isSys ? sysRewardConfig.content : rewards[dateStr];
+                document.getElementById("reward-text").innerText = text;
+                if (adminPassword) {
+                    const modifyBtn = document.createElement("button");
+                    modifyBtn.className = "btn";
+                    modifyBtn.style.marginTop = "10px";
+                    modifyBtn.style.fontSize = "12px";
+                    modifyBtn.innerText = isSys
+                        ? "修改系统奖内容"
+                        : "修改此手动奖励";
+                    modifyBtn.onclick = () => {
+                        closeModal("show-reward-modal");
+                        promptPassword(
+                            isSys ? "sys_config" : "reward",
+                            dateStr,
+                        );
+                    };
+                    const oldBtn =
+                        document.getElementById(
+                            "reward-text",
+                        ).nextElementSibling;
+                    if (oldBtn && oldBtn.tagName === "BUTTON") oldBtn.remove();
+                    document.getElementById("reward-text").after(modifyBtn);
+                }
+                openModal("show-reward-modal");
+            }
+
+            function changeMonth(step) {
+                viewDate.setMonth(viewDate.getMonth() + step);
+                render();
+            }
+            function openModal(id) {
+                document.getElementById(id).style.display = "flex";
+            }
+            function closeModal(id) {
+                document.getElementById(id).style.display = "none";
+            }
+
+            render();
+        </script>
+    </body>
+</html>
