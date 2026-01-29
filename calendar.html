@@ -18,7 +18,7 @@
                 font-family: "Segoe UI", "PingFang SC", sans-serif;
                 background-color: var(--bg-color);
                 margin: 0;
-                padding: 20px;
+                padding: 10px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -28,9 +28,10 @@
                 max-width: 900px;
                 width: 100%;
                 background: white;
-                padding: 20px;
+                padding: 15px;
                 border-radius: 15px;
                 box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                box-sizing: border-box;
             }
 
             header {
@@ -49,7 +50,7 @@
             .calendar-grid {
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
-                gap: 10px;
+                gap: 5px;
             }
 
             .weekday {
@@ -60,10 +61,10 @@
             }
 
             .day {
-                min-height: 120px;
+                min-height: 100px;
                 border: 1px solid #dfe6e9;
-                border-radius: 10px;
-                padding: 8px;
+                border-radius: 8px;
+                padding: 4px;
                 display: flex;
                 flex-direction: column;
                 position: relative;
@@ -114,11 +115,11 @@
             }
 
             .daily-img {
-                width: 60px;
-                height: 60px;
+                width: 45px;
+                height: 45px;
                 object-fit: cover;
-                border-radius: 8px;
-                margin-bottom: 5px;
+                border-radius: 6px;
+                margin-bottom: 3px;
                 pointer-events: auto;
                 border: 1px solid #eee;
             }
@@ -166,15 +167,15 @@
             .reward-icon,
             .sys-reward-icon {
                 position: absolute;
-                bottom: 5px;
-                right: 5px;
-                font-size: 16px;
+                bottom: 2px;
+                right: 2px;
+                font-size: 14px;
                 cursor: pointer;
                 z-index: 3;
             }
 
             .sys-reward-icon {
-                right: 25px; /* 偏移避免重叠 */
+                right: 18px; /* 偏移避免重叠 */
             }
 
             .sys-reward-tag {
@@ -187,6 +188,56 @@
                 padding: 1px 4px;
                 border-bottom-right-radius: 5px;
                 z-index: 2;
+            }
+
+            /* Mobile Adjustments */
+            @media (max-width: 600px) {
+                body {
+                    padding: 5px;
+                }
+                .container {
+                    padding: 10px;
+                }
+                .calendar-grid {
+                    gap: 3px;
+                }
+                .day {
+                    min-height: 80px;
+                    padding: 2px;
+                }
+                .daily-img {
+                    width: 35px;
+                    height: 35px;
+                }
+                .daily-word {
+                    font-size: 9px;
+                }
+                .daily-translation {
+                    font-size: 8px;
+                    transform: scale(0.9);
+                }
+                .pronounce-btn {
+                    font-size: 10px;
+                    margin-top: 0;
+                }
+                .day-num {
+                    font-size: 9px;
+                }
+                .month-title {
+                    font-size: 16px;
+                }
+                .btn {
+                    padding: 5px 8px;
+                    font-size: 11px;
+                }
+                .sys-reward-tag {
+                    font-size: 6px;
+                    padding: 0 2px;
+                }
+                .reward-icon,
+                .sys-reward-icon {
+                    font-size: 12px;
+                }
             }
 
             /* Modals */
