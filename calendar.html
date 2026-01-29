@@ -1,4 +1,4 @@
-<!doctype html>
+```<!doctype html>
 <html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
@@ -24,6 +24,33 @@
                 align-items: center;
             }
 
+            .nav-container {
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .nav-link {
+                color: var(--primary-color);
+                text-decoration: none;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+            .tool-bar {
+                display: flex;
+                justify-content: center;
+                gap: 5px;
+                margin-bottom: 15px;
+            }
+
+            .tool-input {
+                padding: 6px;
+                border: 1px solid #ddd;
+                border-radius: 6px;
+                width: 100px;
+                font-size: 12px;
+            }
+
             .container {
                 max-width: 900px;
                 width: 100%;
@@ -42,7 +69,7 @@
             }
 
             .month-title {
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: bold;
                 color: var(--primary-color);
             }
@@ -57,14 +84,15 @@
                 text-align: center;
                 font-weight: bold;
                 color: #636e72;
-                padding: 10px 0;
+                padding: 5px 0;
+                font-size: 14px;
             }
 
             .day {
                 min-height: 100px;
                 border: 1px solid #dfe6e9;
                 border-radius: 8px;
-                padding: 4px;
+                padding: 6px;
                 display: flex;
                 flex-direction: column;
                 position: relative;
@@ -73,10 +101,11 @@
                 overflow: hidden;
                 background: #fff;
                 align-items: center;
+                box-sizing: border-box;
             }
 
             .day:hover {
-                transform: translateY(-3px);
+                transform: translateY(-2px);
                 box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
             }
 
@@ -102,16 +131,27 @@
                 right: 5px;
                 color: var(--success-color);
                 font-weight: bold;
-                font-size: 18px;
+                font-size: 14px;
                 z-index: 2;
             }
 
-            .day-num {
-                font-size: 12px;
-                font-weight: bold;
-                color: #b2bec3;
-                align-self: flex-start;
+            .day-header {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
                 margin-bottom: 4px;
+            }
+
+            .day-num {
+                font-size: 10px;
+                font-weight: bold;
+                color: #2d3436;
+            }
+
+            .lunar-num {
+                font-weight: normal;
+                color: #a4b0be;
+                font-size: 9px;
             }
 
             .daily-img {
@@ -120,7 +160,6 @@
                 object-fit: cover;
                 border-radius: 6px;
                 margin-bottom: 3px;
-                pointer-events: auto;
                 border: 1px solid #eee;
             }
 
@@ -133,7 +172,7 @@
             }
 
             .daily-word {
-                font-size: 13px;
+                font-size: 11px;
                 color: var(--primary-color);
                 font-weight: 700;
                 white-space: nowrap;
@@ -143,25 +182,19 @@
             }
 
             .daily-translation {
-                font-size: 11px;
+                font-size: 9px;
                 color: #636e72;
-                margin-top: 2px;
+                margin-top: 1px;
             }
 
             .pronounce-btn {
                 background: none;
                 border: none;
                 cursor: pointer;
-                font-size: 12px;
-                padding: 2px;
+                font-size: 10px;
+                padding: 1px;
                 color: var(--primary-color);
-                margin-top: 2px;
                 opacity: 0.7;
-            }
-
-            .pronounce-btn:hover {
-                opacity: 1;
-                transform: scale(1.1);
             }
 
             .reward-icon,
@@ -175,7 +208,7 @@
             }
 
             .sys-reward-icon {
-                right: 18px; /* 偏移避免重叠 */
+                right: 18px;
             }
 
             .sys-reward-tag {
@@ -184,63 +217,52 @@
                 left: 0;
                 background: var(--system-reward-color);
                 color: white;
-                font-size: 9px;
-                padding: 1px 4px;
+                font-size: 8px;
+                padding: 1px 3px;
                 border-bottom-right-radius: 5px;
                 z-index: 2;
             }
 
-            /* Mobile Adjustments */
+            .btn {
+                padding: 6px 10px;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 12px;
+            }
+
+            .btn-confirm {
+                background: var(--primary-color);
+                color: white;
+            }
+
+            .btn-cancel {
+                background: #eee;
+            }
+
+            .info-card {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #636e72;
+                background: #fdf9f9;
+                padding: 12px;
+                border-radius: 10px;
+            }
+
             @media (max-width: 600px) {
-                body {
-                    padding: 5px;
-                }
-                .container {
-                    padding: 10px;
-                }
-                .calendar-grid {
-                    gap: 3px;
-                }
                 .day {
-                    min-height: 80px;
-                    padding: 2px;
+                    min-height: 85px;
                 }
                 .daily-img {
                     width: 35px;
                     height: 35px;
                 }
-                .daily-word {
-                    font-size: 9px;
-                }
-                .daily-translation {
-                    font-size: 8px;
-                    transform: scale(0.9);
-                }
-                .pronounce-btn {
-                    font-size: 10px;
-                    margin-top: 0;
-                }
-                .day-num {
-                    font-size: 9px;
-                }
                 .month-title {
                     font-size: 16px;
                 }
-                .btn {
-                    padding: 5px 8px;
-                    font-size: 11px;
-                }
-                .sys-reward-tag {
-                    font-size: 6px;
-                    padding: 0 2px;
-                }
-                .reward-icon,
-                .sys-reward-icon {
-                    font-size: 12px;
-                }
             }
 
-            /* Modals */
             .modal {
                 display: none;
                 position: fixed;
@@ -257,19 +279,16 @@
 
             .modal-content {
                 background: white;
-                padding: 30px;
+                padding: 25px;
                 border-radius: 15px;
-                width: 320px;
+                width: 280px;
                 box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+                text-align: center;
             }
 
-            .modal-content h3 {
-                margin-top: 0;
-                color: var(--primary-color);
-            }
             .modal-content input {
                 width: 100%;
-                padding: 12px;
+                padding: 10px;
                 margin: 10px 0;
                 border: 1px solid #ddd;
                 border-radius: 8px;
@@ -281,67 +300,22 @@
                 gap: 10px;
                 margin-top: 15px;
             }
-            .btn {
-                flex: 1;
-                padding: 10px;
-                border: none;
-                border-radius: 8px;
-                cursor: pointer;
-                font-weight: bold;
-            }
-            .btn-confirm {
-                background: var(--primary-color);
-                color: white;
-            }
-            .btn-cancel {
-                background: #eee;
-            }
-
-            .info-card {
-                margin-top: 20px;
-                font-size: 13px;
-                color: #636e72;
-                background: #fdf9f9;
-                padding: 15px;
-                border-radius: 10px;
-            }
         </style>
     </head>
     <body>
-        <div style="text-align: center; margin-bottom: 10px">
-            <a
-                href="index.html"
-                style="
-                    color: var(--primary-color);
-                    text-decoration: none;
-                    font-weight: bold;
-                "
-                >🎉 切换到抽奖系统</a
-            >
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">🎉 切换到抽奖系统</a>
         </div>
-        <div
-            style="
-                display: flex;
-                justify-content: center;
-                gap: 5px;
-                margin-bottom: 15px;
-            "
-        >
+
+        <div class="tool-bar">
             <input
                 type="text"
                 id="global-word-input"
+                class="tool-input"
                 placeholder="输入单词"
-                style="
-                    padding: 6px;
-                    border: 1px solid #ddd;
-                    border-radius: 6px;
-                    width: 100px;
-                    font-size: 12px;
-                "
             />
             <button
-                class="btn"
-                style="width: auto; padding: 6px 12px"
+                class="btn btn-confirm"
                 onclick="
                     speak(document.getElementById('global-word-input').value)
                 "
@@ -349,22 +323,21 @@
                 🔊 朗读
             </button>
         </div>
+
         <div class="container">
             <header>
-                <div style="display: flex; gap: 10px">
-                    <button class="btn" onclick="changeMonth(-1)">
-                        上个月
-                    </button>
+                <div style="display: flex; gap: 5px">
+                    <button class="btn" onclick="changeMonth(-1)">上月</button>
                     <button
                         class="btn"
-                        style="background: #a29bfe"
+                        style="background: #a29bfe; color: white"
                         onclick="promptPassword('sys_config')"
                     >
-                        设置周期奖
+                        设置
                     </button>
                 </div>
-                <div class="month-title" id="month-display">2023年 10月</div>
-                <button class="btn" onclick="changeMonth(1)">下个月</button>
+                <div class="month-title" id="month-display"></div>
+                <button class="btn" onclick="changeMonth(1)">下月</button>
             </header>
 
             <div class="calendar-grid" id="calendar-grid">
@@ -378,22 +351,18 @@
             </div>
 
             <div class="info-card">
-                <p>🚀 <b>签到规则：</b></p>
-                <ul>
+                <p style="margin: 0 0 5px 0">🚀 <b>签到指南：</b></p>
+                <ul style="margin: 0; padding-left: 18px">
+                    <li>单击日期：未签到则确认签到，已签到/未来则朗读。</li>
                     <li>
-                        单击日期：进行打卡。一旦确认打卡，普通用户无法撤销。
+                        双击图片：管理员修改该日奖。双击空白：管理员重置签到。
                     </li>
-                    <li>双击图片：设定/修改该日奖励（需管理员密码）。</li>
-                    <li>双击非图片区域：重置打卡状态（需管理员密码）。</li>
-                    <li>
-                        连续打卡满周期将获得周期奖。如中断，奖励会自动延后。
-                    </li>
-                    <li>点击 🔊 图标可以收听单词发音。</li>
+                    <li>坚持打卡可得周期奖。图片每天不同，单词不重复。</li>
                 </ul>
             </div>
         </div>
 
-        <!-- 密码弹窗 -->
+        <!-- Modals -->
         <div id="pw-modal" class="modal">
             <div class="modal-content">
                 <h3 id="pw-title">身份验证</h3>
@@ -407,9 +376,8 @@
                         class="btn btn-cancel"
                         onclick="closeModal('pw-modal')"
                     >
-                        取消
-                    </button>
-                    <button
+                        取消</button
+                    ><button
                         class="btn btn-confirm"
                         onclick="confirmPasswordAction()"
                     >
@@ -418,113 +386,80 @@
                 </div>
             </div>
         </div>
-
-        <!-- 奖励设定弹窗 -->
         <div id="reward-modal" class="modal">
             <div class="modal-content">
                 <h3>设定奖励内容</h3>
-                <input
-                    type="text"
-                    id="reward-input"
-                    placeholder="例如：豪华大礼包"
-                />
+                <input type="text" id="reward-input" placeholder="奖品名称" />
                 <div class="btn-group">
                     <button
                         class="btn btn-cancel"
                         onclick="closeModal('reward-modal')"
                     >
-                        取消
-                    </button>
-                    <button class="btn btn-confirm" onclick="commitReward()">
+                        取消</button
+                    ><button class="btn btn-confirm" onclick="commitReward()">
                         保存
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- 确认签到弹窗 -->
         <div id="checkin-modal" class="modal">
             <div class="modal-content">
-                <h3>签到确认</h3>
-                <p id="checkin-msg"></p>
+                <h3>确认签到</h3>
+                <p id="checkin-msg" style="font-size: 14px"></p>
                 <div class="btn-group">
                     <button
                         class="btn btn-cancel"
                         onclick="closeModal('checkin-modal')"
                     >
-                        再想想
-                    </button>
-                    <button class="btn btn-confirm" onclick="commitCheckIn()">
-                        确定签到
+                        取消</button
+                    ><button class="btn btn-confirm" onclick="commitCheckIn()">
+                        确定
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- 系统奖励周期设定弹窗 -->
         <div id="sys-reward-config-modal" class="modal">
             <div class="modal-content">
                 <h3>周期奖励设定</h3>
-                <div
-                    style="
-                        text-align: left;
-                        font-size: 14px;
-                        margin-bottom: 5px;
-                    "
-                >
-                    打卡周期 (天)
-                </div>
                 <input
                     type="number"
                     id="sys-interval-input"
-                    placeholder="例如：7"
-                />
-                <div
-                    style="
-                        text-align: left;
-                        font-size: 14px;
-                        margin-bottom: 5px;
-                    "
-                >
-                    奖励内容
-                </div>
-                <input
+                    placeholder="周期天数"
+                /><input
                     type="text"
                     id="sys-content-input"
-                    placeholder="例如：额外获得10积分"
+                    placeholder="奖励内容"
                 />
                 <div class="btn-group">
                     <button
                         class="btn btn-cancel"
                         onclick="closeModal('sys-reward-config-modal')"
                     >
-                        取消
-                    </button>
-                    <button
+                        取消</button
+                    ><button
                         class="btn btn-confirm"
                         onclick="commitSysRewardConfig()"
                     >
-                        保存设置
+                        保存
                     </button>
                 </div>
             </div>
         </div>
-
-        <!-- 奖励展示弹窗 -->
         <div id="show-reward-modal" class="modal">
-            <div class="modal-content" style="text-align: center">
+            <div class="modal-content">
                 <h3>🎉 恭喜中奖</h3>
                 <div
                     id="reward-text"
                     style="
-                        font-size: 20px;
+                        font-size: 18px;
                         color: #ff7675;
-                        margin: 20px 0;
+                        margin: 15px 0;
                         font-weight: bold;
                     "
                 ></div>
                 <button
                     class="btn btn-confirm"
+                    style="width: 100%"
                     onclick="closeModal('show-reward-modal')"
                 >
                     收下了
@@ -564,12 +499,33 @@
                 { en: "Music", cn: "音乐" },
                 { en: "Grace", cn: "优雅" },
                 { en: "Wonder", cn: "奇迹" },
+                { en: "Breeze", cn: "微风" },
+                { en: "Clarity", cn: "清晰" },
+                { en: "Dawn", cn: "黎明" },
+                { en: "Essence", cn: "本质" },
+                { en: "Fancy", cn: "想象" },
+                { en: "Gentle", cn: "温柔" },
+                { en: "Harmony", cn: "和谐" },
+                { en: "Infinite", cn: "无限" },
+                { en: "Journey", cn: "旅程" },
+                { en: "Keep", cn: "保持" },
+                { en: "Legend", cn: "传奇" },
+                { en: "Motive", cn: "动力" },
+                { en: "Nature", cn: "自然" },
+                { en: "Origin", cn: "起源" },
+                { en: "Pure", cn: "纯净" },
+                { en: "Quest", cn: "追求" },
+                { en: "Rare", cn: "稀有" },
+                { en: "Sacred", cn: "神圣" },
+                { en: "Theory", cn: "理论" },
+                { en: "Unique", cn: "独特" },
+                { en: "Vital", cn: "关键" },
+                { en: "Wealth", cn: "财富" },
+                { en: "X-ray", cn: "射线" },
+                { en: "Yield", cn: "产出" },
+                { en: "Zenith", cn: "顶点" },
             ];
 
-            let sysRewardConfig = JSON.parse(
-                localStorage.getItem("cal_sys_reward") ||
-                    '{"interval": 7, "content": "周期性成就奖"}',
-            );
             let viewDate = new Date();
             let checkins = JSON.parse(
                 localStorage.getItem("cal_checkins") || "[]",
@@ -578,8 +534,47 @@
                 localStorage.getItem("cal_rewards") || "{}",
             );
             let adminPassword = localStorage.getItem("cal_pw") || "";
+            let sysRewardConfig = JSON.parse(
+                localStorage.getItem("cal_sys_reward") ||
+                    '{"interval": 7, "content": "周期性成就奖"}',
+            );
+            let wordAssignments = JSON.parse(
+                localStorage.getItem("cal_word_assignments") || "{}",
+            );
+
             let pendingDate = "";
             let passwordActionType = "";
+
+            function getWordForDate(dateStr) {
+                if (wordAssignments[dateStr]) return wordAssignments[dateStr];
+                const used = Object.values(wordAssignments).map((w) => w.en);
+                const available = wordList.filter((w) => !used.includes(w.en));
+                let selected =
+                    available.length > 0
+                        ? available[
+                              Math.floor(Math.random() * available.length)
+                          ]
+                        : wordList[0];
+                wordAssignments[dateStr] = selected;
+                localStorage.setItem(
+                    "cal_word_assignments",
+                    JSON.stringify(wordAssignments),
+                );
+                return selected;
+            }
+
+            function getLunarDate(dateStr) {
+                try {
+                    const date = new Date(dateStr);
+                    const formatter = new Intl.DateTimeFormat(
+                        "zh-CN-u-ca-chinese",
+                        { day: "numeric" },
+                    );
+                    return formatter.format(date) + "日";
+                } catch (e) {
+                    return "";
+                }
+            }
 
             function render() {
                 const grid = document.getElementById("calendar-grid");
@@ -587,8 +582,8 @@
                 grid.innerHTML = "";
                 headers.forEach((h) => grid.appendChild(h));
 
-                const y = viewDate.getFullYear();
-                const m = viewDate.getMonth();
+                const y = viewDate.getFullYear(),
+                    m = viewDate.getMonth();
                 document.getElementById("month-display").innerText =
                     `${y}年 ${m + 1}月`;
 
@@ -598,31 +593,25 @@
 
                 const sysRewardDates = [];
                 let validCount = 0;
-                const sortedCheckins = [...checkins].sort();
-                for (let cDate of sortedCheckins) {
-                    if (!rewards[cDate]) {
+                [...checkins].sort().forEach((d) => {
+                    if (!rewards[d]) {
                         validCount++;
                         if (validCount % sysRewardConfig.interval === 0)
-                            sysRewardDates.push(cDate);
+                            sysRewardDates.push(d);
                     }
-                }
+                });
 
                 for (let i = firstDay; i > 0; i--)
-                    grid.appendChild(createDay(prevLastDate - i + 1, true));
+                    grid.appendChild(createDayEl(prevLastDate - i + 1, true));
                 for (let d = 1; d <= lastDate; d++) {
-                    const dateStr = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+                    const ds = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
                     grid.appendChild(
-                        createDay(
-                            d,
-                            false,
-                            dateStr,
-                            sysRewardDates.includes(dateStr),
-                        ),
+                        createDayEl(d, false, ds, sysRewardDates.includes(ds)),
                     );
                 }
             }
 
-            function createDay(num, isOther, dateStr, isSystemReward) {
+            function createDayEl(num, isOther, ds, isSys) {
                 const div = document.createElement("div");
                 div.className = "day" + (isOther ? " other-month" : "");
                 if (isOther) {
@@ -632,123 +621,92 @@
 
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                const isToday = new Date(dateStr).getTime() === today.getTime();
-                if (isToday) div.classList.add("today");
-                if (checkins.includes(dateStr)) div.classList.add("checked-in");
+                if (new Date(ds).getTime() === today.getTime())
+                    div.classList.add("today");
+                if (checkins.includes(ds)) div.classList.add("checked-in");
 
-                const seed = dateStr.replace(/-/g, "");
-                const wordObj = wordList[parseInt(seed) % wordList.length];
-
-                div.innerHTML = `<span class="day-num">${num}</span>`;
+                const word = getWordForDate(ds);
+                const lunar = getLunarDate(ds);
+                div.innerHTML = `<div class="day-header"><span class="day-num">${num}</span><span class="lunar-num">${lunar}</span></div>`;
 
                 const img = document.createElement("img");
                 img.className = "daily-img";
-                img.src = `https://picsum.photos/seed/${seed}/120/120`; // 稍微大一点保证清晰
+                img.src = `https://picsum.photos/seed/${ds.replace(/-/g, "")}/80/80`;
                 img.ondblclick = (e) => {
                     e.stopPropagation();
-                    promptPassword("reward", dateStr);
+                    promptPassword("reward", ds);
                 };
                 div.appendChild(img);
 
-                const wordContainer = document.createElement("div");
-                wordContainer.className = "word-container";
+                const wc = document.createElement("div");
+                wc.className = "word-container";
+                wc.innerHTML = `<div class="daily-word">${word.en}</div><div class="daily-translation">${word.cn}</div><button class="pronounce-btn" onclick="event.stopPropagation(); speak('${word.en}')">🔊</button>`;
+                div.appendChild(wc);
 
-                const wordEl = document.createElement("div");
-                wordEl.className = "daily-word";
-                wordEl.innerText = wordObj.en;
-                wordContainer.appendChild(wordEl);
-
-                const transEl = document.createElement("div");
-                transEl.className = "daily-translation";
-                transEl.innerText = wordObj.cn;
-                wordContainer.appendChild(transEl);
-
-                const pronounceBtn = document.createElement("button");
-                pronounceBtn.className = "pronounce-btn";
-                pronounceBtn.innerHTML = "🔊";
-                pronounceBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    speak(wordObj.en);
-                };
-                wordContainer.appendChild(pronounceBtn);
-
-                div.appendChild(wordContainer);
-
-                if (rewards[dateStr]) {
+                if (rewards[ds]) {
                     const icon = document.createElement("div");
                     icon.className = "reward-icon";
                     icon.innerText = "🎁";
                     icon.onclick = (e) => {
                         e.stopPropagation();
-                        showRewardInfo(dateStr, false);
+                        showRewardInfo(ds, false);
+                    };
+                    div.appendChild(icon);
+                }
+                if (isSys) {
+                    div.insertAdjacentHTML(
+                        "afterbegin",
+                        '<div class="sys-reward-tag">系统奖</div>',
+                    );
+                    const icon = document.createElement("div");
+                    icon.className = "sys-reward-icon";
+                    icon.innerText = "🏆";
+                    icon.onclick = (e) => {
+                        e.stopPropagation();
+                        showRewardInfo(ds, true);
                     };
                     div.appendChild(icon);
                 }
 
-                if (isSystemReward) {
-                    const tag = document.createElement("div");
-                    tag.className = "sys-reward-tag";
-                    tag.innerText = "系统奖";
-                    div.appendChild(tag);
-                    const sysIcon = document.createElement("div");
-                    sysIcon.className = "sys-reward-icon";
-                    sysIcon.innerText = "🏆";
-                    sysIcon.onclick = (e) => {
-                        e.stopPropagation();
-                        showRewardInfo(dateStr, true);
-                    };
-                    div.appendChild(sysIcon);
-                }
-
-                let clickTimer = null;
-                div.onclick = (e) => {
-                    if (clickTimer) {
-                        clearTimeout(clickTimer);
-                        clickTimer = null;
-                        promptPassword("reset", dateStr);
+                let timer = null;
+                div.onclick = () => {
+                    if (timer) {
+                        clearTimeout(timer);
+                        timer = null;
+                        promptPassword("reset", ds);
                     } else {
-                        clickTimer = setTimeout(() => {
-                            clickTimer = null;
-                            startCheckInFlow(dateStr, wordObj.en);
+                        timer = setTimeout(() => {
+                            timer = null;
+                            handleCheckInClick(ds, word.en);
                         }, 250);
                     }
                 };
-
                 return div;
             }
 
             function speak(text) {
+                if (!text) return;
                 if ("speechSynthesis" in window) {
-                    // 先取消所有正在排队的语音，防止堵塞
                     window.speechSynthesis.cancel();
-                    const utterance = new SpeechSynthesisUtterance(text);
-                    utterance.lang = "en-US";
-                    utterance.rate = 0.9;
-                    window.speechSynthesis.speak(utterance);
-                } else {
-                    alert("抱歉，您的浏览器不支持语音播放。");
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = "en-US";
+                    u.rate = 0.9;
+                    window.speechSynthesis.speak(u);
                 }
             }
 
-            function startCheckInFlow(dateStr, wordEn) {
-                if (checkins.includes(dateStr)) {
-                    speak(wordEn);
-                    return;
+            function handleCheckInClick(ds, en) {
+                if (checkins.includes(ds) || new Date(ds) > new Date()) {
+                    speak(en);
+                    if (checkins.includes(ds)) return;
                 }
-                const target = new Date(dateStr);
-                const now = new Date();
-                now.setHours(0, 0, 0, 0);
-
-                if (target > now) {
-                    speak(wordEn);
-                    return;
-                }
-                pendingDate = dateStr;
-                const nextRewardCount =
+                if (new Date(ds) > new Date()) return;
+                pendingDate = ds;
+                const remain =
                     sysRewardConfig.interval -
                     (checkins.length % sysRewardConfig.interval);
                 document.getElementById("checkin-msg").innerText =
-                    `恭喜你完成打卡准备！\n\n距离获取下个系统奖励还需 ${nextRewardCount} 天。`;
+                    `确认签到吗？距离下个系统奖还需 ${remain} 天。`;
                 openModal("checkin-modal");
             }
 
@@ -760,24 +718,22 @@
                 render();
             }
 
-            function promptPassword(type, dateStr) {
-                pendingDate = dateStr;
+            function promptPassword(type, ds) {
+                pendingDate = ds;
                 passwordActionType = type;
                 document.getElementById("pw-title").innerText = adminPassword
-                    ? "管理员身份验证"
-                    : "首次设置管理员密码";
+                    ? "身份验证"
+                    : "设置管理密码";
                 openModal("pw-modal");
             }
 
             function confirmPasswordAction() {
-                const input = document.getElementById("pw-input").value;
+                const val = document.getElementById("pw-input").value;
                 if (!adminPassword) {
-                    if (input.length < 4) return alert("密码至少4位");
-                    adminPassword = input;
-                    localStorage.setItem("cal_pw", adminPassword);
-                } else if (input !== adminPassword) {
-                    return alert("密码错误！");
-                }
+                    if (val.length < 4) return alert("太短");
+                    adminPassword = val;
+                    localStorage.setItem("cal_pw", val);
+                } else if (val !== adminPassword) return alert("错误");
                 closeModal("pw-modal");
                 document.getElementById("pw-input").value = "";
                 if (passwordActionType === "reward") {
@@ -800,24 +756,6 @@
                 }
             }
 
-            function commitSysRewardConfig() {
-                const interval = parseInt(
-                    document.getElementById("sys-interval-input").value,
-                );
-                const content = document
-                    .getElementById("sys-content-input")
-                    .value.trim();
-                if (isNaN(interval) || interval < 1)
-                    return alert("周期必须是大于0的数字");
-                sysRewardConfig = { interval, content };
-                localStorage.setItem(
-                    "cal_sys_reward",
-                    JSON.stringify(sysRewardConfig),
-                );
-                closeModal("sys-reward-config-modal");
-                render();
-            }
-
             function commitReward() {
                 const val = document
                     .getElementById("reward-input")
@@ -829,38 +767,47 @@
                 render();
             }
 
-            function showRewardInfo(dateStr, isSys) {
-                if (!checkins.includes(dateStr))
-                    return alert("请先打卡解锁奖励！");
-                const text = isSys ? sysRewardConfig.content : rewards[dateStr];
+            function commitSysRewardConfig() {
+                const i = parseInt(
+                    document.getElementById("sys-interval-input").value,
+                );
+                const c = document
+                    .getElementById("sys-content-input")
+                    .value.trim();
+                if (isNaN(i) || i < 1) return alert("无效");
+                sysRewardConfig = { interval: i, content: c };
+                localStorage.setItem(
+                    "cal_sys_reward",
+                    JSON.stringify(sysRewardConfig),
+                );
+                closeModal("sys-reward-config-modal");
+                render();
+            }
+
+            function showRewardInfo(ds, isSys) {
+                if (!checkins.includes(ds)) return alert("请先签到");
+                const text = isSys ? sysRewardConfig.content : rewards[ds];
                 document.getElementById("reward-text").innerText = text;
+                const oldBtn =
+                    document.getElementById("reward-text").nextElementSibling;
+                if (oldBtn && oldBtn.tagName === "BUTTON") oldBtn.remove();
                 if (adminPassword) {
-                    const modifyBtn = document.createElement("button");
-                    modifyBtn.className = "btn";
-                    modifyBtn.style.marginTop = "10px";
-                    modifyBtn.style.fontSize = "12px";
-                    modifyBtn.innerText = isSys
-                        ? "修改系统奖内容"
-                        : "修改此手动奖励";
-                    modifyBtn.onclick = () => {
+                    const b = document.createElement("button");
+                    b.className = "btn btn-confirm";
+                    b.style.width = "100%";
+                    b.style.marginTop = "5px";
+                    b.innerText = isSys ? "修改系统奖" : "修改手动奖";
+                    b.onclick = () => {
                         closeModal("show-reward-modal");
-                        promptPassword(
-                            isSys ? "sys_config" : "reward",
-                            dateStr,
-                        );
+                        promptPassword(isSys ? "sys_config" : "reward", ds);
                     };
-                    const oldBtn =
-                        document.getElementById(
-                            "reward-text",
-                        ).nextElementSibling;
-                    if (oldBtn && oldBtn.tagName === "BUTTON") oldBtn.remove();
-                    document.getElementById("reward-text").after(modifyBtn);
+                    document.getElementById("reward-text").after(b);
                 }
                 openModal("show-reward-modal");
             }
 
-            function changeMonth(step) {
-                viewDate.setMonth(viewDate.getMonth() + step);
+            function changeMonth(s) {
+                viewDate.setMonth(viewDate.getMonth() + s);
                 render();
             }
             function openModal(id) {
@@ -874,3 +821,4 @@
         </script>
     </body>
 </html>
+```
