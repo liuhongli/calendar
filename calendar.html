@@ -738,8 +738,9 @@
                 const target = new Date(dateStr);
                 const now = new Date();
                 now.setHours(0, 0, 0, 0);
+
                 if (target > now) {
-                    alert("未来的打卡机会还在赶来的路上，请明天再来！");
+                    speak(wordEn);
                     return;
                 }
                 pendingDate = dateStr;
