@@ -257,6 +257,17 @@
         </style>
     </head>
     <body>
+        <div style="text-align: center; margin-bottom: 15px">
+            <a
+                href="index.html"
+                style="
+                    color: var(--primary-color);
+                    text-decoration: none;
+                    font-weight: bold;
+                "
+                >🎉 切换到抽奖系统</a
+            >
+        </div>
         <div class="container">
             <header>
                 <div style="display: flex; gap: 10px">
@@ -627,8 +638,11 @@
 
             function speak(text) {
                 if ("speechSynthesis" in window) {
+                    // 先取消所有正在排队的语音，防止堵塞
+                    window.speechSynthesis.cancel();
                     const utterance = new SpeechSynthesisUtterance(text);
                     utterance.lang = "en-US";
+                    utterance.rate = 0.9;
                     window.speechSynthesis.speak(utterance);
                 } else {
                     alert("抱歉，您的浏览器不支持语音播放。");
