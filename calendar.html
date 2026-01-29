@@ -2,33 +2,39 @@
 <html lang="zh-CN">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>智能英语打卡系统</title>
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        />
+        <title>CET四六级打卡日历</title>
         <style>
             :root {
                 --primary-color: #6c5ce7;
                 --success-color: #00b894;
                 --reward-color: #fdcb6e;
-                --system-reward-color: #ff7675;
-                --bg-color: #f0f2f5;
-                --text-color: #2d3436;
+                --sys-reward-color: #ff7675;
+                --bg-color: #f8f9fa;
+                --text-main: #2d3436;
+                --text-sub: #636e72;
             }
 
             body {
-                font-family: "Segoe UI", "PingFang SC", sans-serif;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    sans-serif;
                 background-color: var(--bg-color);
                 margin: 0;
                 padding: 10px;
                 display: flex;
                 flex-direction: column;
                 align-items: center;
+                color: var(--text-main);
             }
 
-            .nav-container {
+            .nav-header {
                 text-align: center;
                 margin-bottom: 10px;
             }
-
             .nav-link {
                 color: var(--primary-color);
                 text-decoration: none;
@@ -36,38 +42,38 @@
                 font-size: 14px;
             }
 
-            .tool-bar {
+            .search-bar {
                 display: flex;
-                justify-content: center;
-                gap: 5px;
+                width: 100%;
+                max-width: 400px;
+                gap: 8px;
                 margin-bottom: 15px;
             }
-
-            .tool-input {
-                padding: 6px;
+            .search-input {
+                flex: 1;
+                padding: 8px 12px;
                 border: 1px solid #ddd;
-                border-radius: 6px;
-                width: 100px;
-                font-size: 12px;
+                border-radius: 20px;
+                outline: none;
+                font-size: 14px;
             }
 
             .container {
-                max-width: 900px;
                 width: 100%;
+                max-width: 800px;
                 background: white;
-                padding: 15px;
-                border-radius: 15px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border-radius: 20px;
+                padding: 12px;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
                 box-sizing: border-box;
             }
 
-            header {
+            .calendar-header {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
             }
-
             .month-title {
                 font-size: 18px;
                 font-weight: bold;
@@ -77,190 +83,156 @@
             .calendar-grid {
                 display: grid;
                 grid-template-columns: repeat(7, 1fr);
-                gap: 5px;
+                gap: 4px;
             }
 
             .weekday {
                 text-align: center;
+                font-size: 11px;
                 font-weight: bold;
-                color: #636e72;
-                padding: 5px 0;
-                font-size: 14px;
+                color: var(--text-sub);
+                padding-bottom: 8px;
             }
 
             .day {
-                min-height: 100px;
-                border: 1px solid #dfe6e9;
-                border-radius: 8px;
-                padding: 6px;
+                min-height: 105px;
+                background: #fff;
+                border: 1px solid #edf2f7;
+                border-radius: 10px;
+                padding: 4px;
                 display: flex;
                 flex-direction: column;
+                align-items: center;
                 position: relative;
                 cursor: pointer;
-                transition: all 0.2s;
-                overflow: hidden;
-                background: #fff;
-                align-items: center;
                 box-sizing: border-box;
             }
-
-            .day:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            }
-
             .day.today {
                 border: 2px solid var(--primary-color);
-                background: #f8faff;
+                background: #f0f7ff;
             }
-
-            .day.other-month {
-                opacity: 0.3;
-                cursor: default;
-                pointer-events: none;
-            }
-
             .day.checked-in {
                 background-color: #e6fffb;
             }
+            .day.other-month {
+                opacity: 0.15;
+                pointer-events: none;
+            }
 
-            .day.checked-in::before {
-                content: "✓";
+            .day-header {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-bottom: 4px;
+                line-height: 1.2;
+            }
+            .day-num {
+                font-size: 11px;
+                font-weight: bold;
+                color: var(--text-main);
+            }
+            .lunar {
+                color: #a4b0be;
+                font-weight: normal;
+                font-size: 8px;
+            }
+
+            .day-img {
+                width: 40px;
+                height: 40px;
+                object-fit: cover;
+                border-radius: 6px;
+                margin-bottom: 4px;
+                border: 1px solid #eee;
+            }
+
+            .word-wrap {
+                text-align: center;
+                width: 100%;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+            .en-word {
+                font-size: 11px;
+                font-weight: 800;
+                color: var(--primary-color);
+                line-height: 1;
+                word-break: break-all;
+                margin-bottom: 2px;
+            }
+            .cn-word {
+                font-size: 9px;
+                color: var(--text-sub);
+                transform: scale(0.9);
+            }
+
+            .audio-btn {
+                background: none;
+                border: none;
+                color: var(--primary-color);
+                font-size: 10px;
+                padding: 2px;
+            }
+
+            .badge-reward,
+            .badge-sys {
+                position: absolute;
+                bottom: 2px;
+                font-size: 12px;
+                z-index: 5;
+            }
+            .badge-reward {
+                right: 2px;
+            }
+            .badge-sys {
+                right: 18px;
+            }
+            .sys-tag {
+                position: absolute;
+                top: 0;
+                left: 0;
+                background: var(--sys-reward-color);
+                color: white;
+                font-size: 7px;
+                padding: 1px 3px;
+                border-bottom-right-radius: 5px;
+            }
+            .check-mark {
                 position: absolute;
                 top: 2px;
                 right: 5px;
                 color: var(--success-color);
-                font-weight: bold;
-                font-size: 14px;
-                z-index: 2;
-            }
-
-            .day-header {
-                display: flex;
-                justify-content: space-between;
-                width: 100%;
-                margin-bottom: 4px;
-            }
-
-            .day-num {
                 font-size: 10px;
                 font-weight: bold;
-                color: #2d3436;
-            }
-
-            .lunar-num {
-                font-weight: normal;
-                color: #a4b0be;
-                font-size: 9px;
-            }
-
-            .daily-img {
-                width: 45px;
-                height: 45px;
-                object-fit: cover;
-                border-radius: 6px;
-                margin-bottom: 3px;
-                border: 1px solid #eee;
-            }
-
-            .word-container {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-                width: 100%;
-            }
-
-            .daily-word {
-                font-size: 11px;
-                color: var(--primary-color);
-                font-weight: 700;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-            }
-
-            .daily-translation {
-                font-size: 9px;
-                color: #636e72;
-                margin-top: 1px;
-            }
-
-            .pronounce-btn {
-                background: none;
-                border: none;
-                cursor: pointer;
-                font-size: 10px;
-                padding: 1px;
-                color: var(--primary-color);
-                opacity: 0.7;
-            }
-
-            .reward-icon,
-            .sys-reward-icon {
-                position: absolute;
-                bottom: 2px;
-                right: 2px;
-                font-size: 14px;
-                cursor: pointer;
-                z-index: 3;
-            }
-
-            .sys-reward-icon {
-                right: 18px;
-            }
-
-            .sys-reward-tag {
-                position: absolute;
-                top: 0;
-                left: 0;
-                background: var(--system-reward-color);
-                color: white;
-                font-size: 8px;
-                padding: 1px 3px;
-                border-bottom-right-radius: 5px;
-                z-index: 2;
             }
 
             .btn {
-                padding: 6px 10px;
                 border: none;
                 border-radius: 8px;
-                cursor: pointer;
+                padding: 6px 12px;
                 font-weight: bold;
-                font-size: 12px;
+                cursor: pointer;
+                font-size: 13px;
             }
-
-            .btn-confirm {
+            .btn-primary {
                 background: var(--primary-color);
                 color: white;
             }
-
-            .btn-cancel {
+            .btn-gray {
                 background: #eee;
+                color: #333;
             }
 
-            .info-card {
-                margin-top: 20px;
-                font-size: 12px;
-                color: #636e72;
-                background: #fdf9f9;
+            .info-panel {
+                margin-top: 15px;
                 padding: 12px;
-                border-radius: 10px;
-            }
-
-            @media (max-width: 600px) {
-                .day {
-                    min-height: 85px;
-                }
-                .daily-img {
-                    width: 35px;
-                    height: 35px;
-                }
-                .month-title {
-                    font-size: 16px;
-                }
+                background: #fffbe6;
+                border-radius: 12px;
+                font-size: 12px;
+                color: #856404;
             }
 
             .modal {
@@ -270,75 +242,92 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(3px);
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
                 justify-content: center;
                 align-items: center;
-                z-index: 1000;
             }
-
             .modal-content {
                 background: white;
                 padding: 25px;
-                border-radius: 15px;
-                width: 280px;
-                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+                border-radius: 20px;
+                width: 85%;
+                max-width: 320px;
                 text-align: center;
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             }
-
             .modal-content input {
                 width: 100%;
-                padding: 10px;
+                padding: 12px;
                 margin: 10px 0;
                 border: 1px solid #ddd;
                 border-radius: 8px;
                 box-sizing: border-box;
+                font-size: 16px;
             }
-
-            .btn-group {
+            .btn-row {
                 display: flex;
                 gap: 10px;
                 margin-top: 15px;
             }
+            .btn-row button {
+                flex: 1;
+            }
+
+            @media (max-width: 400px) {
+                .day {
+                    min-height: 90px;
+                }
+                .day-img {
+                    width: 30px;
+                    height: 30px;
+                }
+                .en-word {
+                    font-size: 9px;
+                }
+            }
         </style>
     </head>
     <body>
-        <div class="nav-container">
+        <div class="nav-header">
             <a href="index.html" class="nav-link">🎉 切换到抽奖系统</a>
         </div>
 
-        <div class="tool-bar">
+        <div class="search-bar">
             <input
                 type="text"
-                id="global-word-input"
-                class="tool-input"
-                placeholder="输入单词"
+                id="global-input"
+                class="search-input"
+                placeholder="单词朗读..."
             />
             <button
-                class="btn btn-confirm"
-                onclick="
-                    speak(document.getElementById('global-word-input').value)
-                "
+                class="btn btn-primary"
+                onclick="speak(document.getElementById('global-input').value)"
             >
-                🔊 朗读
+                朗读
             </button>
         </div>
 
         <div class="container">
-            <header>
-                <div style="display: flex; gap: 5px">
-                    <button class="btn" onclick="changeMonth(-1)">上月</button>
+            <div class="calendar-header">
+                <div>
+                    <button class="btn btn-gray" onclick="changeMonth(-1)">
+                        上月
+                    </button>
                     <button
-                        class="btn"
-                        style="background: #a29bfe; color: white"
-                        onclick="promptPassword('sys_config')"
+                        class="btn btn-primary"
+                        style="background: #a29bfe"
+                        onclick="openAdmin('sys_config')"
                     >
                         设置
                     </button>
                 </div>
                 <div class="month-title" id="month-display"></div>
-                <button class="btn" onclick="changeMonth(1)">下月</button>
-            </header>
+                <button class="btn btn-gray" onclick="changeMonth(1)">
+                    下月
+                </button>
+            </div>
 
             <div class="calendar-grid" id="calendar-grid">
                 <div class="weekday">日</div>
@@ -350,117 +339,109 @@
                 <div class="weekday">六</div>
             </div>
 
-            <div class="info-card">
-                <p style="margin: 0 0 5px 0">🚀 <b>签到指南：</b></p>
-                <ul style="margin: 0; padding-left: 18px">
-                    <li>单击日期：未签到则确认签到，已签到/未来则朗读。</li>
-                    <li>
-                        双击图片：管理员修改该日奖。双击空白：管理员重置签到。
-                    </li>
-                    <li>坚持打卡可得周期奖。图片每天不同，单词不重复。</li>
-                </ul>
+            <div class="info-panel">
+                <b>💡 提示：</b>
+                单击签到/朗读；双击图设奖；双击空白重置；阴历中文显示，单词顺序取自CET。
             </div>
         </div>
 
         <!-- Modals -->
-        <div id="pw-modal" class="modal">
+        <div id="modal-pw" class="modal">
             <div class="modal-content">
-                <h3 id="pw-title">身份验证</h3>
-                <input
-                    type="password"
-                    id="pw-input"
-                    placeholder="输入管理密码"
-                />
-                <div class="btn-group">
+                <h3 id="pw-title">安全验证</h3>
+                <input type="password" id="pw-input" placeholder="管理密码" />
+                <div class="btn-row">
                     <button
-                        class="btn btn-cancel"
-                        onclick="closeModal('pw-modal')"
+                        class="btn btn-gray"
+                        onclick="closeModal('modal-pw')"
                     >
-                        取消</button
-                    ><button
-                        class="btn btn-confirm"
-                        onclick="confirmPasswordAction()"
-                    >
+                        取消
+                    </button>
+                    <button class="btn btn-primary" onclick="verifyAdmin()">
                         确定
                     </button>
                 </div>
             </div>
         </div>
-        <div id="reward-modal" class="modal">
+
+        <div id="modal-checkin" class="modal">
             <div class="modal-content">
-                <h3>设定奖励内容</h3>
-                <input type="text" id="reward-input" placeholder="奖品名称" />
-                <div class="btn-group">
+                <h2
+                    id="checkin-word"
+                    style="color: var(--primary-color); margin: 0"
+                ></h2>
+                <p
+                    id="checkin-msg"
+                    style="font-size: 14px; color: #666; margin: 15px 0"
+                ></p>
+                <div class="btn-row">
                     <button
-                        class="btn btn-cancel"
-                        onclick="closeModal('reward-modal')"
+                        class="btn btn-gray"
+                        onclick="closeModal('modal-checkin')"
                     >
-                        取消</button
-                    ><button class="btn btn-confirm" onclick="commitReward()">
+                        取消
+                    </button>
+                    <button class="btn btn-primary" onclick="confirmCheckIn()">
+                        确认签到
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="modal-reward" class="modal">
+            <div class="modal-content">
+                <h3>设置奖励</h3>
+                <input type="text" id="reward-input" placeholder="奖励名称" />
+                <div class="btn-row">
+                    <button
+                        class="btn btn-gray"
+                        onclick="closeModal('modal-reward')"
+                    >
+                        取消
+                    </button>
+                    <button class="btn btn-primary" onclick="saveReward()">
                         保存
                     </button>
                 </div>
             </div>
         </div>
-        <div id="checkin-modal" class="modal">
+
+        <div id="modal-sys" class="modal">
             <div class="modal-content">
-                <h3>确认签到</h3>
-                <p id="checkin-msg" style="font-size: 14px"></p>
-                <div class="btn-group">
+                <h3>周期奖配置</h3>
+                <input type="number" id="sys-interval" placeholder="周期天数" />
+                <input type="text" id="sys-content" placeholder="奖品描述" />
+                <div class="btn-row">
                     <button
-                        class="btn btn-cancel"
-                        onclick="closeModal('checkin-modal')"
+                        class="btn btn-gray"
+                        onclick="closeModal('modal-sys')"
                     >
-                        取消</button
-                    ><button class="btn btn-confirm" onclick="commitCheckIn()">
-                        确定
+                        取消
                     </button>
-                </div>
-            </div>
-        </div>
-        <div id="sys-reward-config-modal" class="modal">
-            <div class="modal-content">
-                <h3>周期奖励设定</h3>
-                <input
-                    type="number"
-                    id="sys-interval-input"
-                    placeholder="周期天数"
-                /><input
-                    type="text"
-                    id="sys-content-input"
-                    placeholder="奖励内容"
-                />
-                <div class="btn-group">
-                    <button
-                        class="btn btn-cancel"
-                        onclick="closeModal('sys-reward-config-modal')"
-                    >
-                        取消</button
-                    ><button
-                        class="btn btn-confirm"
-                        onclick="commitSysRewardConfig()"
-                    >
+                    <button class="btn btn-primary" onclick="saveSysConfig()">
                         保存
                     </button>
                 </div>
             </div>
         </div>
-        <div id="show-reward-modal" class="modal">
+
+        <div id="modal-show-reward" class="modal">
             <div class="modal-content">
-                <h3>🎉 恭喜中奖</h3>
+                <h3>🎉 恭喜获得</h3>
                 <div
-                    id="reward-text"
+                    id="show-reward-text"
                     style="
-                        font-size: 18px;
+                        font-size: 20px;
                         color: #ff7675;
-                        margin: 15px 0;
                         font-weight: bold;
+                        margin: 20px 0;
                     "
                 ></div>
+                <div id="admin-edit-area"></div>
                 <button
-                    class="btn btn-confirm"
+                    class="btn btn-primary"
                     style="width: 100%"
-                    onclick="closeModal('show-reward-modal')"
+                    onclick="closeModal('modal-show-reward')"
                 >
                     收下了
                 </button>
@@ -468,62 +449,273 @@
         </div>
 
         <script>
-            const wordList = [
-                { en: "Dream", cn: "梦想" },
-                { en: "Brave", cn: "勇敢" },
-                { en: "Focus", cn: "专注" },
-                { en: "Great", cn: "伟大" },
-                { en: "Happy", cn: "快乐" },
-                { en: "Kind", cn: "善良" },
-                { en: "Light", cn: "光明" },
-                { en: "Noble", cn: "高尚" },
-                { en: "Ocean", cn: "海洋" },
-                { en: "Quiet", cn: "安静" },
-                { en: "River", cn: "河流" },
-                { en: "Smile", cn: "微笑" },
-                { en: "Trust", cn: "信任" },
-                { en: "Unity", cn: "团结" },
-                { en: "Value", cn: "价值" },
-                { en: "Young", cn: "年轻" },
-                { en: "Zest", cn: "热情" },
-                { en: "Active", cn: "活跃" },
-                { en: "Bright", cn: "明亮" },
-                { en: "Daily", cn: "日常" },
+            const CET_LIST = [
+                { en: "Abandon", cn: "放弃" },
+                { en: "Ability", cn: "能力" },
+                { en: "Abolish", cn: "废除" },
+                { en: "Abstract", cn: "抽象" },
+                { en: "Abundant", cn: "丰富的" },
+                { en: "Academic", cn: "学术的" },
+                { en: "Accelerate", cn: "加速" },
+                { en: "Access", cn: "入口" },
+                { en: "Accompany", cn: "陪伴" },
+                { en: "Accomplish", cn: "完成" },
+                { en: "Accurate", cn: "准确的" },
+                { en: "Achieve", cn: "达到" },
+                { en: "Acknowledge", cn: "承认" },
+                { en: "Acquire", cn: "获得" },
+                { en: "Adapt", cn: "适应" },
+                { en: "Adequate", cn: "充足" },
+                { en: "Adjust", cn: "调整" },
+                { en: "Adopt", cn: "采用" },
+                { en: "Advocate", cn: "提倡" },
+                { en: "Affect", cn: "影响" },
+                { en: "Allocate", cn: "分配" },
+                { en: "Alter", cn: "改变" },
+                { en: "Alternative", cn: "选择" },
+                { en: "Analyze", cn: "分析" },
+                { en: "Annual", cn: "年度的" },
+                { en: "Apparent", cn: "明显的" },
+                { en: "Appreciate", cn: "欣赏" },
+                { en: "Appropriate", cn: "适当" },
+                { en: "Aspect", cn: "方面" },
+                { en: "Assess", cn: "评估" },
+                { en: "Assign", cn: "分配" },
+                { en: "Assist", cn: "协助" },
+                { en: "Assume", cn: "假设" },
+                { en: "Assure", cn: "保证" },
+                { en: "Attach", cn: "附着" },
+                { en: "Attain", cn: "获得" },
+                { en: "Attitude", cn: "态度" },
+                { en: "Attribute", cn: "属性" },
+                { en: "Authority", cn: "权威" },
+                { en: "Available", cn: "可用" },
+                { en: "Benefit", cn: "利益" },
+                { en: "Brief", cn: "简短" },
+                { en: "Capable", cn: "有能力" },
+                { en: "Capacity", cn: "容量" },
+                { en: "Category", cn: "类别" },
+                { en: "Cease", cn: "停止" },
+                { en: "Challenge", cn: "挑战" },
+                { en: "Channel", cn: "频道" },
+                { en: "Civil", cn: "公民" },
+                { en: "Clarify", cn: "澄清" },
+                { en: "Classic", cn: "经典" },
+                { en: "Code", cn: "代码" },
+                { en: "Combine", cn: "结合" },
+                { en: "Comment", cn: "评论" },
+                { en: "Commit", cn: "提交" },
+                { en: "Communicate", cn: "沟通" },
+                { en: "Complex", cn: "复杂" },
+                { en: "Component", cn: "组件" },
+                { en: "Concept", cn: "概念" },
+                { en: "Conclude", cn: "结论" },
+                { en: "Conduct", cn: "引导" },
+                { en: "Confirm", cn: "确认" },
+                { en: "Conflict", cn: "冲突" },
+                { en: "Consent", cn: "同意" },
+                { en: "Constant", cn: "恒定" },
+                { en: "Construct", cn: "建造" },
+                { en: "Consult", cn: "咨询" },
+                { en: "Consume", cn: "消耗" },
+                { en: "Contact", cn: "接触" },
+                { en: "Context", cn: "上下文" },
+                { en: "Contract", cn: "合同" },
+                { en: "Contrast", cn: "对比" },
+                { en: "Convert", cn: "转换" },
+                { en: "Convince", cn: "说服" },
+                { en: "Core", cn: "核心" },
+                { en: "Corporate", cn: "法人" },
+                { en: "Create", cn: "创造" },
+                { en: "Credit", cn: "信用" },
+                { en: "Culture", cn: "文化" },
+                { en: "Cycle", cn: "周期" },
+                { en: "Data", cn: "数据" },
+                { en: "Debate", cn: "辩论" },
+                { en: "Decline", cn: "下降" },
+                { en: "Define", cn: "定义" },
+                { en: "Design", cn: "设计" },
+                { en: "Detect", cn: "检测" },
+                { en: "Device", cn: "设备" },
+                { en: "Display", cn: "显示" },
+                { en: "Diverse", cn: "多样" },
+                { en: "Domain", cn: "领域" },
+                { en: "Domestic", cn: "国内" },
+                { en: "Draft", cn: "草案" },
+                { en: "Drama", cn: "戏剧" },
+                { en: "Dynamic", cn: "动态" },
+                { en: "Economy", cn: "经济" },
+                { en: "Element", cn: "元素" },
+                { en: "Eliminate", cn: "消除" },
+                { en: "Emerge", cn: "出现" },
+                { en: "Emphasis", cn: "强调" },
+                { en: "Enable", cn: "启用" },
                 { en: "Energy", cn: "能量" },
-                { en: "Peace", cn: "和平" },
-                { en: "Glory", cn: "荣耀" },
-                { en: "Spirit", cn: "精神" },
-                { en: "Magic", cn: "魔法" },
-                { en: "Wisdom", cn: "智慧" },
-                { en: "Faith", cn: "信念" },
-                { en: "Music", cn: "音乐" },
-                { en: "Grace", cn: "优雅" },
-                { en: "Wonder", cn: "奇迹" },
-                { en: "Breeze", cn: "微风" },
-                { en: "Clarity", cn: "清晰" },
-                { en: "Dawn", cn: "黎明" },
-                { en: "Essence", cn: "本质" },
-                { en: "Fancy", cn: "想象" },
-                { en: "Gentle", cn: "温柔" },
-                { en: "Harmony", cn: "和谐" },
-                { en: "Infinite", cn: "无限" },
-                { en: "Journey", cn: "旅程" },
-                { en: "Keep", cn: "保持" },
-                { en: "Legend", cn: "传奇" },
-                { en: "Motive", cn: "动力" },
-                { en: "Nature", cn: "自然" },
-                { en: "Origin", cn: "起源" },
-                { en: "Pure", cn: "纯净" },
-                { en: "Quest", cn: "追求" },
-                { en: "Rare", cn: "稀有" },
-                { en: "Sacred", cn: "神圣" },
+                { en: "Enhance", cn: "增强" },
+                { en: "Ensure", cn: "确保" },
+                { en: "Entity", cn: "实体" },
+                { en: "Error", cn: "错误" },
+                { en: "Establish", cn: "建立" },
+                { en: "Estate", cn: "资产" },
+                { en: "Estimate", cn: "估计" },
+                { en: "Ethic", cn: "伦理" },
+                { en: "Evaluate", cn: "评价" },
+                { en: "Eventual", cn: "最终" },
+                { en: "Evident", cn: "显然" },
+                { en: "Exceed", cn: "超过" },
+                { en: "Exclude", cn: "排除" },
+                { en: "Exhibit", cn: "展览" },
+                { en: "Expand", cn: "扩张" },
+                { en: "Expert", cn: "专家" },
+                { en: "Explicit", cn: "明确" },
+                { en: "Export", cn: "出口" },
+                { en: "Expose", cn: "暴露" },
+                { en: "External", cn: "外部" },
+                { en: "Factor", cn: "因素" },
+                { en: "Feature", cn: "特征" },
+                { en: "Finance", cn: "金融" },
+                { en: "Final", cn: "最后" },
+                { en: "Flexible", cn: "灵活" },
+                { en: "Focus", cn: "焦点" },
+                { en: "Format", cn: "格式" },
+                { en: "Formula", cn: "公式" },
+                { en: "Function", cn: "功能" },
+                { en: "Fund", cn: "基金" },
+                { en: "Gender", cn: "性别" },
+                { en: "Generate", cn: "生成" },
+                { en: "Globe", cn: "全球" },
+                { en: "Goal", cn: "目标" },
+                { en: "Grant", cn: "授予" },
+                { en: "Identify", cn: "鉴定" },
+                { en: "Image", cn: "形象" },
+                { en: "Impact", cn: "影响" },
+                { en: "Imply", cn: "暗示" },
+                { en: "Index", cn: "索引" },
+                { en: "Indicate", cn: "指出" },
+                { en: "Initial", cn: "最初" },
+                { en: "Input", cn: "输入" },
+                { en: "Insert", cn: "插入" },
+                { en: "Insight", cn: "见解" },
+                { en: "Inspect", cn: "视察" },
+                { en: "Instance", cn: "例子" },
+                { en: "Integrate", cn: "整合" },
+                { en: "Internal", cn: "内部" },
+                { en: "Interpret", cn: "解释" },
+                { en: "Invest", cn: "投资" },
+                { en: "Issue", cn: "发行" },
+                { en: "Item", cn: "条款" },
+                { en: "Label", cn: "标签" },
+                { en: "Legal", cn: "法律" },
+                { en: "Liberal", cn: "自由" },
+                { en: "Link", cn: "链接" },
+                { en: "Locate", cn: "定位" },
+                { en: "Logic", cn: "逻辑" },
+                { en: "Maintain", cn: "维持" },
+                { en: "Major", cn: "主要" },
+                { en: "Manual", cn: "手册" },
+                { en: "Margin", cn: "边缘" },
+                { en: "Medical", cn: "医疗" },
+                { en: "Medium", cn: "中等" },
+                { en: "Mental", cn: "心理" },
+                { en: "Method", cn: "方法" },
+                { en: "Modify", cn: "修改" },
+                { en: "Monitor", cn: "监视" },
+                { en: "Mutual", cn: "相互" },
+                { en: "Network", cn: "网络" },
+                { en: "Neutral", cn: "中立" },
+                { en: "Normal", cn: "正常" },
+                { en: "Notion", cn: "想法" },
+                { en: "Nuclear", cn: "核心" },
+                { en: "Objective", cn: "客观" },
+                { en: "Obvious", cn: "明显" },
+                { en: "Option", cn: "选项" },
+                { en: "Output", cn: "输出" },
+                { en: "Overall", cn: "全部" },
+                { en: "Overlap", cn: "重叠" },
+                { en: "Partner", cn: "伴侣" },
+                { en: "Passive", cn: "被动" },
+                { en: "Period", cn: "阶段" },
+                { en: "Persist", cn: "坚持" },
+                { en: "Phase", cn: "时期" },
+                { en: "Policy", cn: "政策" },
+                { en: "Positive", cn: "积极" },
+                { en: "Potential", cn: "潜力" },
+                { en: "Predict", cn: "预测" },
+                { en: "Previous", cn: "以前" },
+                { en: "Primary", cn: "首要" },
+                { en: "Principle", cn: "原则" },
+                { en: "Proceed", cn: "进行" },
+                { en: "Process", cn: "过程" },
+                { en: "Project", cn: "计划" },
+                { en: "Promote", cn: "促进" },
+                { en: "Purchase", cn: "购买" },
+                { en: "Pursue", cn: "追赶" },
+                { en: "Random", cn: "随机" },
+                { en: "Range", cn: "范围" },
+                { en: "Ratio", cn: "比率" },
+                { en: "Rational", cn: "理性" },
+                { en: "React", cn: "反应" },
+                { en: "Recover", cn: "恢复" },
+                { en: "Region", cn: "地区" },
+                { en: "Reject", cn: "拒绝" },
+                { en: "Release", cn: "释放" },
+                { en: "Relevant", cn: "相关" },
+                { en: "Rely", cn: "依靠" },
+                { en: "Remove", cn: "移除" },
+                { en: "Require", cn: "要求" },
+                { en: "Research", cn: "研究" },
+                { en: "Resolve", cn: "解决" },
+                { en: "Resource", cn: "资源" },
+                { en: "Respond", cn: "回答" },
+                { en: "Restore", cn: "修复" },
+                { en: "Reveal", cn: "揭露" },
+                { en: "Reverse", cn: "倒转" },
+                { en: "Review", cn: "复习" },
+                { en: "Role", cn: "角色" },
+                { en: "Route", cn: "路线" },
+                { en: "Schedule", cn: "日程" },
+                { en: "Scheme", cn: "方案" },
+                { en: "Scope", cn: "范围" },
+                { en: "Section", cn: "部分" },
+                { en: "Sector", cn: "扇区" },
+                { en: "Secure", cn: "安全" },
+                { en: "Seek", cn: "寻求" },
+                { en: "Select", cn: "选择" },
+                { en: "Series", cn: "系列" },
+                { en: "Shift", cn: "转换" },
+                { en: "Signal", cn: "信号" },
+                { en: "Similar", cn: "相似" },
+                { en: "Site", cn: "地点" },
+                { en: "Source", cn: "来源" },
+                { en: "Specific", cn: "特定" },
+                { en: "Status", cn: "状态" },
+                { en: "Stress", cn: "压力" },
+                { en: "Style", cn: "风格" },
+                { en: "Submit", cn: "提交" },
+                { en: "Summary", cn: "摘要" },
+                { en: "Survey", cn: "调查" },
+                { en: "Symbol", cn: "符号" },
+                { en: "Target", cn: "目标" },
+                { en: "Task", cn: "任务" },
+                { en: "Team", cn: "团队" },
                 { en: "Theory", cn: "理论" },
+                { en: "Topic", cn: "话题" },
+                { en: "Trace", cn: "踪迹" },
+                { en: "Transfer", cn: "转让" },
+                { en: "Trend", cn: "趋势" },
+                { en: "Trigger", cn: "触发" },
                 { en: "Unique", cn: "独特" },
-                { en: "Vital", cn: "关键" },
-                { en: "Wealth", cn: "财富" },
-                { en: "X-ray", cn: "射线" },
-                { en: "Yield", cn: "产出" },
-                { en: "Zenith", cn: "顶点" },
+                { en: "Unit", cn: "单元" },
+                { en: "Valid", cn: "有效" },
+                { en: "Vary", cn: "变化" },
+                { en: "Vehicle", cn: "车辆" },
+                { en: "Version", cn: "版本" },
+                { en: "Via", cn: "经由" },
+                { en: "Virtual", cn: "虚拟" },
+                { en: "Visible", cn: "可见" },
+                { en: "Vision", cn: "远见" },
+                { en: "Visual", cn: "视觉" },
+                { en: "Volume", cn: "音量" },
             ];
 
             let viewDate = new Date();
@@ -533,44 +725,74 @@
             let rewards = JSON.parse(
                 localStorage.getItem("cal_rewards") || "{}",
             );
-            let adminPassword = localStorage.getItem("cal_pw") || "";
+            let wordMap = JSON.parse(
+                localStorage.getItem("cal_word_map") || "{}",
+            );
+            let cetPointer = parseInt(
+                localStorage.getItem("cal_cet_ptr") || "0",
+            );
             let sysRewardConfig = JSON.parse(
                 localStorage.getItem("cal_sys_reward") ||
                     '{"interval": 7, "content": "周期性成就奖"}',
             );
-            let wordAssignments = JSON.parse(
-                localStorage.getItem("cal_word_assignments") || "{}",
-            );
+            let adminPassword = localStorage.getItem("cal_pw") || "";
+            let pendingDate = "",
+                passwordActionType = "";
 
-            let pendingDate = "";
-            let passwordActionType = "";
+            const LUNAR_MAP = [
+                "初一",
+                "初二",
+                "初三",
+                "初四",
+                "初五",
+                "初六",
+                "初七",
+                "初八",
+                "初九",
+                "初十",
+                "十一",
+                "十二",
+                "十三",
+                "十四",
+                "十五",
+                "十六",
+                "十七",
+                "十八",
+                "十九",
+                "二十",
+                "廿一",
+                "廿二",
+                "廿三",
+                "廿四",
+                "廿五",
+                "廿六",
+                "廿七",
+                "廿八",
+                "廿九",
+                "三十",
+            ];
 
-            function getWordForDate(dateStr) {
-                if (wordAssignments[dateStr]) return wordAssignments[dateStr];
-                const used = Object.values(wordAssignments).map((w) => w.en);
-                const available = wordList.filter((w) => !used.includes(w.en));
-                let selected =
-                    available.length > 0
-                        ? available[
-                              Math.floor(Math.random() * available.length)
-                          ]
-                        : wordList[0];
-                wordAssignments[dateStr] = selected;
-                localStorage.setItem(
-                    "cal_word_assignments",
-                    JSON.stringify(wordAssignments),
-                );
-                return selected;
+            function getWordForDate(ds) {
+                if (wordMap[ds]) return wordMap[ds];
+                const word = CET_LIST[cetPointer % CET_LIST.length];
+                wordMap[ds] = word;
+                cetPointer++;
+                localStorage.setItem("cal_word_map", JSON.stringify(wordMap));
+                localStorage.setItem("cal_cet_ptr", cetPointer.toString());
+                return word;
             }
 
-            function getLunarDate(dateStr) {
+            function getLunar(ds) {
                 try {
-                    const date = new Date(dateStr);
-                    const formatter = new Intl.DateTimeFormat(
+                    const dt = new Date(ds);
+                    const lunarStr = new Intl.DateTimeFormat(
                         "zh-CN-u-ca-chinese",
                         { day: "numeric" },
-                    );
-                    return formatter.format(date) + "日";
+                    ).format(dt);
+                    const dayNum = parseInt(lunarStr.replace(/[^0-9]/g, ""));
+                    if (!isNaN(dayNum) && dayNum >= 1 && dayNum <= 30)
+                        return LUNAR_MAP[dayNum - 1];
+                    return lunarStr.replace(/日$/, "");
                 } catch (e) {
                     return "";
                 }
@@ -578,94 +800,83 @@
 
             function render() {
                 const grid = document.getElementById("calendar-grid");
+                const display = document.getElementById("month-display");
                 const headers = Array.from(grid.querySelectorAll(".weekday"));
                 grid.innerHTML = "";
                 headers.forEach((h) => grid.appendChild(h));
 
                 const y = viewDate.getFullYear(),
                     m = viewDate.getMonth();
-                document.getElementById("month-display").innerText =
-                    `${y}年 ${m + 1}月`;
+                display.innerText = `${y}年 ${m + 1}月`;
 
                 const firstDay = new Date(y, m, 1).getDay();
                 const lastDate = new Date(y, m + 1, 0).getDate();
-                const prevLastDate = new Date(y, m, 0).getDate();
+                const prevLast = new Date(y, m, 0).getDate();
 
+                const sortedCheckins = [...checkins].sort();
                 const sysRewardDates = [];
-                let validCount = 0;
-                [...checkins].sort().forEach((d) => {
+                let vCount = 0;
+                sortedCheckins.forEach((d) => {
                     if (!rewards[d]) {
-                        validCount++;
-                        if (validCount % sysRewardConfig.interval === 0)
+                        vCount++;
+                        if (vCount % sysRewardConfig.interval === 0)
                             sysRewardDates.push(d);
                     }
                 });
 
                 for (let i = firstDay; i > 0; i--)
-                    grid.appendChild(createDayEl(prevLastDate - i + 1, true));
+                    grid.appendChild(createCell(prevLast - i + 1, true));
                 for (let d = 1; d <= lastDate; d++) {
                     const ds = `${y}-${String(m + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
                     grid.appendChild(
-                        createDayEl(d, false, ds, sysRewardDates.includes(ds)),
+                        createCell(d, false, ds, sysRewardDates.includes(ds)),
                     );
                 }
             }
 
-            function createDayEl(num, isOther, ds, isSys) {
+            function createCell(num, isOther, ds, isSys) {
                 const div = document.createElement("div");
                 div.className = "day" + (isOther ? " other-month" : "");
                 if (isOther) {
-                    div.innerHTML = `<span class="day-num">${num}</span>`;
+                    div.innerHTML = `<span style="font-size:10px;color:#ccc">${num}</span>`;
                     return div;
                 }
 
-                const today = new Date();
-                today.setHours(0, 0, 0, 0);
-                if (new Date(ds).getTime() === today.getTime())
-                    div.classList.add("today");
+                const todayStr = new Date().toLocaleDateString("en-CA");
+                if (ds === todayStr) div.classList.add("today");
                 if (checkins.includes(ds)) div.classList.add("checked-in");
 
                 const word = getWordForDate(ds);
-                const lunar = getLunarDate(ds);
-                div.innerHTML = `<div class="day-header"><span class="day-num">${num}</span><span class="lunar-num">${lunar}</span></div>`;
+                const lunar = getLunar(ds);
 
-                const img = document.createElement("img");
-                img.className = "daily-img";
-                img.src = `https://picsum.photos/seed/${ds.replace(/-/g, "")}/80/80`;
-                img.ondblclick = (e) => {
-                    e.stopPropagation();
-                    promptPassword("reward", ds);
-                };
-                div.appendChild(img);
+                div.innerHTML = `
+                <div class="day-header"><div class="day-num">${num}</div><div class="lunar">${lunar}</div></div>
+                <img class="day-img" src="https://picsum.photos/seed/${ds}/80/80" ondblclick="event.stopPropagation(); openAdmin('reward','${ds}')">
+                <div class="word-wrap">
+                    <div class="en-word" style="font-size:${word.en.length > 12 ? "9px" : "11px"}">${word.en}</div>
+                    <div class="cn-word">${word.cn}</div>
+                    <button class="audio-btn" onclick="event.stopPropagation(); speak('${word.en}')">🔊</button>
+                </div>`;
 
-                const wc = document.createElement("div");
-                wc.className = "word-container";
-                wc.innerHTML = `<div class="daily-word">${word.en}</div><div class="daily-translation">${word.cn}</div><button class="pronounce-btn" onclick="event.stopPropagation(); speak('${word.en}')">🔊</button>`;
-                div.appendChild(wc);
-
-                if (rewards[ds]) {
-                    const icon = document.createElement("div");
-                    icon.className = "reward-icon";
-                    icon.innerText = "🎁";
-                    icon.onclick = (e) => {
-                        e.stopPropagation();
-                        showRewardInfo(ds, false);
-                    };
-                    div.appendChild(icon);
-                }
+                if (checkins.includes(ds))
+                    div.insertAdjacentHTML(
+                        "beforeend",
+                        '<span class="check-mark">✓</span>',
+                    );
+                if (rewards[ds])
+                    div.insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="badge-reward" onclick="event.stopPropagation(); showRewardInfo('${ds}',false)">🎁</span>`,
+                    );
                 if (isSys) {
                     div.insertAdjacentHTML(
                         "afterbegin",
-                        '<div class="sys-reward-tag">系统奖</div>',
+                        '<div class="sys-tag">周期奖</div>',
                     );
-                    const icon = document.createElement("div");
-                    icon.className = "sys-reward-icon";
-                    icon.innerText = "🏆";
-                    icon.onclick = (e) => {
-                        e.stopPropagation();
-                        showRewardInfo(ds, true);
-                    };
-                    div.appendChild(icon);
+                    div.insertAdjacentHTML(
+                        "beforeend",
+                        `<span class="badge-sys" onclick="event.stopPropagation(); showRewardInfo('${ds}',true)">🏆</span>`,
+                    );
                 }
 
                 let timer = null;
@@ -673,79 +884,75 @@
                     if (timer) {
                         clearTimeout(timer);
                         timer = null;
-                        promptPassword("reset", ds);
+                        openAdmin("reset", ds);
                     } else {
                         timer = setTimeout(() => {
                             timer = null;
-                            handleCheckInClick(ds, word.en);
+                            handleCellClick(ds, word);
                         }, 250);
                     }
                 };
                 return div;
             }
 
-            function speak(text) {
-                if (!text) return;
-                if ("speechSynthesis" in window) {
-                    window.speechSynthesis.cancel();
-                    const u = new SpeechSynthesisUtterance(text);
-                    u.lang = "en-US";
-                    u.rate = 0.9;
-                    window.speechSynthesis.speak(u);
-                }
-            }
-
-            function handleCheckInClick(ds, en) {
-                if (checkins.includes(ds) || new Date(ds) > new Date()) {
-                    speak(en);
+            function handleCellClick(ds, word) {
+                const today = new Date().toLocaleDateString("en-CA");
+                if (checkins.includes(ds) || ds > today) {
+                    speak(word.en);
                     if (checkins.includes(ds)) return;
                 }
-                if (new Date(ds) > new Date()) return;
+                if (ds > today) return;
                 pendingDate = ds;
                 const remain =
                     sysRewardConfig.interval -
                     (checkins.length % sysRewardConfig.interval);
+                document.getElementById("checkin-word").innerText = word.en;
                 document.getElementById("checkin-msg").innerText =
-                    `确认签到吗？距离下个系统奖还需 ${remain} 天。`;
-                openModal("checkin-modal");
+                    `确认签到吗？距离下个周期奖还需 ${remain} 天。`;
+                openModal("modal-checkin");
             }
 
-            function commitCheckIn() {
-                checkins.push(pendingDate);
-                checkins.sort();
-                localStorage.setItem("cal_checkins", JSON.stringify(checkins));
-                closeModal("checkin-modal");
+            function confirmCheckIn() {
+                if (!checkins.includes(pendingDate)) {
+                    checkins.push(pendingDate);
+                    checkins.sort();
+                    localStorage.setItem(
+                        "cal_checkins",
+                        JSON.stringify(checkins),
+                    );
+                }
+                closeModal("modal-checkin");
                 render();
             }
 
-            function promptPassword(type, ds) {
-                pendingDate = ds;
+            function openAdmin(type, ds) {
+                pendingDate = ds || "";
                 passwordActionType = type;
                 document.getElementById("pw-title").innerText = adminPassword
                     ? "身份验证"
                     : "设置管理密码";
-                openModal("pw-modal");
+                openModal("modal-pw");
             }
 
-            function confirmPasswordAction() {
+            function verifyAdmin() {
                 const val = document.getElementById("pw-input").value;
                 if (!adminPassword) {
-                    if (val.length < 4) return alert("太短");
+                    if (val.length < 4) return alert("密码至少4位");
                     adminPassword = val;
                     localStorage.setItem("cal_pw", val);
-                } else if (val !== adminPassword) return alert("错误");
-                closeModal("pw-modal");
+                } else if (val !== adminPassword) return alert("密码错误");
+                closeModal("modal-pw");
                 document.getElementById("pw-input").value = "";
                 if (passwordActionType === "reward") {
                     document.getElementById("reward-input").value =
                         rewards[pendingDate] || "";
-                    openModal("reward-modal");
+                    openModal("modal-reward");
                 } else if (passwordActionType === "sys_config") {
-                    document.getElementById("sys-interval-input").value =
+                    document.getElementById("sys-interval").value =
                         sysRewardConfig.interval;
-                    document.getElementById("sys-content-input").value =
+                    document.getElementById("sys-content").value =
                         sysRewardConfig.content;
-                    openModal("sys-reward-config-modal");
+                    openModal("modal-sys");
                 } else if (passwordActionType === "reset") {
                     checkins = checkins.filter((d) => d !== pendingDate);
                     localStorage.setItem(
@@ -756,58 +963,64 @@
                 }
             }
 
-            function commitReward() {
+            function saveReward() {
                 const val = document
                     .getElementById("reward-input")
                     .value.trim();
                 if (val) rewards[pendingDate] = val;
                 else delete rewards[pendingDate];
                 localStorage.setItem("cal_rewards", JSON.stringify(rewards));
-                closeModal("reward-modal");
+                closeModal("modal-reward");
                 render();
             }
 
-            function commitSysRewardConfig() {
+            function saveSysConfig() {
                 const i = parseInt(
-                    document.getElementById("sys-interval-input").value,
+                    document.getElementById("sys-interval").value,
                 );
-                const c = document
-                    .getElementById("sys-content-input")
-                    .value.trim();
-                if (isNaN(i) || i < 1) return alert("无效");
+                const c = document.getElementById("sys-content").value.trim();
+                if (isNaN(i) || i < 1) return alert("无效周期");
                 sysRewardConfig = { interval: i, content: c };
                 localStorage.setItem(
                     "cal_sys_reward",
                     JSON.stringify(sysRewardConfig),
                 );
-                closeModal("sys-reward-config-modal");
+                closeModal("modal-sys");
                 render();
             }
 
             function showRewardInfo(ds, isSys) {
                 if (!checkins.includes(ds)) return alert("请先签到");
                 const text = isSys ? sysRewardConfig.content : rewards[ds];
-                document.getElementById("reward-text").innerText = text;
-                const oldBtn =
-                    document.getElementById("reward-text").nextElementSibling;
-                if (oldBtn && oldBtn.tagName === "BUTTON") oldBtn.remove();
+                document.getElementById("show-reward-text").innerText = text;
+                const area = document.getElementById("admin-edit-area");
+                area.innerHTML = "";
                 if (adminPassword) {
                     const b = document.createElement("button");
-                    b.className = "btn btn-confirm";
+                    b.className = "btn btn-primary";
                     b.style.width = "100%";
-                    b.style.marginTop = "5px";
+                    b.style.marginBottom = "10px";
                     b.innerText = isSys ? "修改系统奖" : "修改手动奖";
                     b.onclick = () => {
-                        closeModal("show-reward-modal");
-                        promptPassword(isSys ? "sys_config" : "reward", ds);
+                        closeModal("modal-show-reward");
+                        openAdmin(isSys ? "sys_config" : "reward", ds);
                     };
-                    document.getElementById("reward-text").after(b);
+                    area.appendChild(b);
                 }
-                openModal("show-reward-modal");
+                openModal("modal-show-reward");
             }
 
-            function changeMonth(s) {
-                viewDate.setMonth(viewDate.getMonth() + s);
+            function speak(text) {
+                if (!text || !("speechSynthesis" in window)) return;
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = "en-US";
+                u.rate = 0.9;
+                window.speechSynthesis.speak(u);
+            }
+
+            function changeMonth(step) {
+                viewDate.setMonth(viewDate.getMonth() + step);
                 render();
             }
             function openModal(id) {
@@ -821,4 +1034,3 @@
         </script>
     </body>
 </html>
-```
